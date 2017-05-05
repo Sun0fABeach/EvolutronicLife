@@ -1,0 +1,95 @@
+html, body {
+  height: 100%;
+}
+html {
+  width: 100%;
+}
+body {
+  background-color: #151010;
+  margin: 0;  /* remove browser auto-margin */
+  font-family: sans-serif;
+}
+main {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+pre {
+  background-color: #999966;
+  border: groove 5px #904723;
+  border-radius: 12px;
+  padding: 5px;
+  letter-spacing: 1px;
+  font-family: monospace;
+  cursor: default;
+}
+pre > span {
+  display: inline-block;
+  width: 8.65px; /* prevents certain chars from breaking monospace */
+  /*overflow-x: hidden;*/
+}
+pre > span.water {
+  color: blue;
+}
+pre > span.beach {
+  color: orange;
+}
+pre > span.protozoan {
+  color: pink;
+}
+pre > span.rainforest {
+  color: #1a421f;
+}
+pre > span.plant {
+  color: darkgreen;
+}
+pre > span.herbivore {
+  color: yellow;
+}
+pre > span.carnivore {
+  color: red;
+}
+
+#control_panel {
+  text-align: center;
+}
+
+#speed_ctrl {
+  display: inline-block;
+  color: #b0acac;
+}
+#speed_ctrl > label {
+  font-size: 0.9em;
+}
+#steps_per_sec {
+  margin-right: 20px;
+  font-family: monospace;
+  font-size: 1.1em;
+}
+
+input[type=button] {
+  background-color: black;
+  border: none;
+  outline: 1px solid #904723;
+  color: #b0acac;
+  cursor: pointer;
+  padding: 8px 16px;
+  margin-right: 20px;
+  width: 82px;
+}
+input[type=button]:hover {
+  outline-width: 2px;
+}
+input[type=button]:active {
+  color: white;
+}
+
+input[type=button][disabled] {
+  background-color: #151010;
+  color: #868181;
+  cursor: default;
+}
+input[type=button][disabled]:hover {
+  outline-width: 1px;
+}
