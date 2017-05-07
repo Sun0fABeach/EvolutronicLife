@@ -28,7 +28,7 @@ const helpers = function() {
      * Select a random alement of an array.
      * @method array_choice
      * @param {Array} arr Array to select a random element from
-     * @return {any} A random element of the array.
+     * @return {any} A random element of the array, or undefined if it is empty.
      */
     function array_choice(arr) {
         return arr[random_in_range(0, arr.length)];
