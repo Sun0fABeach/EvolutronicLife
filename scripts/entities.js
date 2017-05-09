@@ -10,6 +10,15 @@
 // TODO mixin pattern might be useful here. => 'level'+'max_level-zeug', 'die', 'instance' methods
 // TODO getters and setters? where sensible?
 
+function Mortal(Base = class {}) {
+    return class extends Base {
+        die() {
+            this.tile.remove_entity(this);
+            this.tile = null;
+            return this;
+        }
+    }
+}
 
 class Entity {
     constructor(allows_step, tile = null) {
@@ -25,6 +34,10 @@ class Entity {
     }
     get pos_x() {
         return this.tile.pos_x;
+    }
+
+    in_simulation() {
+        return !!this.tile;
     }
 }
 
@@ -58,7 +71,7 @@ class Water extends Entity {
     }
 }
 
-class Animal extends Entity {
+class Animal extends Mortal(Entity) {
     constructor(tile) {
         super(-Infinity, tile);
     }
@@ -78,7 +91,7 @@ class LandAnimal extends Animal {
 
     _grow_older() {
         if(this._time_to_live-- === 0) {
-            this.tile.pop_entity();
+            this.die();
             return false;
         }
         return true;
@@ -105,7 +118,7 @@ class LandAnimal extends Animal {
         this._energy = Math.min(min_energy, this._energy + 1);
         this._rdy_to_copulate = true;
         if((prey.health -= this._attack) <= 0)
-            return {ate: true, killed_prey: prey.tile.remove_entity(prey)};
+            return {ate: true, killed_prey: prey.die()};
         if(prey instanceof Plant && prey.level > 0)
             prey.devolve();
 
@@ -115,7 +128,7 @@ class LandAnimal extends Animal {
     _survive_without_food() {
         this._rdy_to_copulate = false;
         if(this._energy-- === 0) {
-            this.tile.pop_entity();
+            this.die();
             return false;
         }
         return true;
@@ -184,7 +197,7 @@ class LandAnimal extends Animal {
         if(!target_tile) {
             target_tile = this._random_step();
             if(!target_tile) {  // no way to move: death of entity
-                this.tile.pop_entity();
+                this.die();
                 return false;
             }
         }
@@ -397,7 +410,7 @@ class Protozoan extends Animal {
         const env = this.tile.env_rings[0];
         const swimmable_tiles = env.filter((tile) => tile.entity(Water));
         if(swimmable_tiles.length === 0) {
-            this.tile.pop_entity();
+            this.die();
             return false; // dies when it has nowhere to move
         }
         this.go_to_tile(helpers.array_choice(swimmable_tiles));
@@ -451,7 +464,7 @@ class RainForest extends Vegetation {
     }
 }
 
-class Plant extends Vegetation {
+class Plant extends Mortal(Vegetation) {
     constructor(tile, lvl) {
         const cfg = Entity.config.get(Plant);
         const level = Math.min(lvl, cfg.max_level);
