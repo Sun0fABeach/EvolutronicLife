@@ -341,7 +341,7 @@ class LandAnimal extends Animal {
 
 class Herbivore extends LandAnimal {
     constructor(tile, lvl) {
-        const cfg = Entity.config.get(Herbivore);
+        const cfg = Herbivore.config;
         const level = Math.min(lvl, cfg.max_level);
 
         super(tile, level);
@@ -362,7 +362,7 @@ class Herbivore extends LandAnimal {
 
 class Carnivore extends LandAnimal {
     constructor(tile, lvl) {
-        const cfg = Entity.config.get(Carnivore);
+        const cfg = Carnivore.config;
         const level = Math.min(lvl, cfg.max_level);
 
         super(tile, level);
@@ -383,8 +383,7 @@ class Carnivore extends LandAnimal {
 class Protozoan extends Animal {
     constructor(tile) {
         super(tile);
-        this._cfg = Entity.config.get(Protozoan);
-        this._time_to_live = this._cfg.time_to_live;
+        this._time_to_live = Protozoan.config.time_to_live;
     }
 
     _beach_reachable() {
@@ -396,8 +395,8 @@ class Protozoan extends Animal {
 
     _jump_on_beach() {
         this.tile.pop_entity();
-        const constr = helpers.chance_in_percent(this._cfg.herby_evo_chance) ?
-                                                        Herbivore : Carnivore;
+        const constr = helpers.chance_in_percent(
+            Protozoan.config.herby_evo_chance) ? Herbivore : Carnivore;
         return new constr(helpers.array_choice(this._adjacent_beaches), 0);
     }
 
@@ -436,7 +435,7 @@ class Vegetation extends Entity {
         if(free_tiles.length > 0) {
             if(this._ticks_to_reproduce === undefined) {
                 this._ticks_to_reproduce = helpers.random_in_range(
-                    ...Entity.config.get(Vegetation).ticks_repro_range
+                    ...Vegetation.config.ticks_repro_range
                 );
             } else if(--this._ticks_to_reproduce <= 0) {
                 this._ticks_to_reproduce = undefined;
@@ -466,27 +465,26 @@ class RainForest extends Vegetation {
 
 class Plant extends Mortal(Vegetation) {
     constructor(tile, lvl) {
-        const cfg = Entity.config.get(Plant);
+        const cfg = Plant.config;
         const level = Math.min(lvl, cfg.max_level);
         const allows_step = Math.abs(lvl - cfg.max_level);
 
         super(allows_step, tile);
 
-        this._cfg = cfg;
         this._lvl = level;
         this.health = cfg.health[level];
         this._ticks_to_evolve = undefined;
     }
 
     _set_configs(lvl) {
-        this._lvl = Math.min(lvl, this._cfg.max_level);
-        this.allows_step = Math.abs(this._lvl - this._cfg.max_level);
-        this.health = this._cfg.health[this._lvl];
+        this._lvl = Math.min(lvl, Plant.config.max_level);
+        this.allows_step = Math.abs(this._lvl - Plant.config.max_level);
+        this.health = Plant.config.health[this._lvl];
         this._ticks_to_evolve = undefined;
     }
 
     _can_evolve() {
-        if(this._lvl === this._cfg.max_level)
+        if(this._lvl === Plant.config.max_level)
             return false;
 
         const env = this.tile.env_rings[0];
@@ -496,7 +494,7 @@ class Plant extends Mortal(Vegetation) {
                    tile.entity(Border);
         })) {
             if(this._ticks_to_evolve === undefined) {
-                const tick_range = this._cfg.ticks_evo_range;
+                const tick_range = Plant.config.ticks_evo_range;
                 this._ticks_to_evolve = helpers.random_in_range(...tick_range);
                 return false;
             } else {
@@ -518,8 +516,8 @@ class Plant extends Mortal(Vegetation) {
     }
 
     devolve() {
-        for(let lvl = 0; lvl < this._cfg.health.length-1; ++lvl) {
-            if(this.health <= this._cfg.health[lvl]) {
+        for(let lvl = 0; lvl < Plant.config.health.length-1; ++lvl) {
+            if(this.health <= Plant.config.health[lvl]) {
                 this._set_configs(lvl);
                 return;
             }
@@ -535,43 +533,36 @@ class Plant extends Mortal(Vegetation) {
     }
 }
 
-Entity.config = new Map([
-    [Vegetation, {
-            ticks_repro_range: [10, 40]
-        }
-    ],
-    [Plant, {
-            max_level: 2,
-            health: [5, 10, 15],
-            ticks_evo_range: [40, 100]
-        }
-    ],
-    [Protozoan, {
-            time_to_live: 20,
-            herby_evo_chance: 80
-        }
-    ],
-    [Herbivore, {
-            max_level: 2,
-            time_to_live: [50, 100, 150],
-            view_range: [4, 6, 8],
-            food: [10, 10, 10],
-            energy: [10, 20, 30],
-            health: [5, 10, 15],
-            attack: [5, 10, 15],
-            lvlup_chance: 50,
-            min_energy_replenish: 10
-        }
-    ],
-    [Carnivore, {
-            max_level: 2,
-            time_to_live: [50, 100, 150],
-            view_range: [4, 6, 8],
-            food: [10, 10, 10],
-            energy: [10, 20, 30],
-            attack: [5, 10, 15],
-            lvlup_chance: 50,
-            min_energy_replenish: 10
-        }
-    ]
-]);
+Vegetation.config = {
+    ticks_repro_range: [10, 40]
+};
+Plant.config = {
+    max_level: 2,
+    health: [5, 10, 15],
+    ticks_evo_range: [40, 100]
+}
+Protozoan.config = {
+    time_to_live: 20,
+    herby_evo_chance: 80
+}
+Herbivore.config = {
+    max_level: 2,
+    time_to_live: [50, 100, 150],
+    view_range: [4, 6, 8],
+    food: [10, 10, 10],
+    energy: [10, 20, 30],
+    health: [5, 10, 15],
+    attack: [5, 10, 15],
+    lvlup_chance: 50,
+    min_energy_replenish: 10
+}
+Carnivore.config = {
+    max_level: 2,
+    time_to_live: [50, 100, 150],
+    view_range: [4, 6, 8],
+    food: [10, 10, 10],
+    energy: [10, 20, 30],
+    attack: [5, 10, 15],
+    lvlup_chance: 50,
+    min_energy_replenish: 10
+}
