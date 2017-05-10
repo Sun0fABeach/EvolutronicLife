@@ -1,13 +1,13 @@
 "use strict";
 
 /**
- * Game entitiy class hierarchy.
+ * Game entity class hierarchy.
  * @module entities
  * @requires helpers
  * @requires tile
  */
 
-// TODO mixin pattern might be useful here. => 'level'+'max_level-zeug', 'die', 'instance' methods
+// TODO 'instance' as static class methods (even via mixin?)
 // TODO getters and setters? where sensible?
 
 function Mortal(Base = class {}) {
@@ -16,6 +16,19 @@ function Mortal(Base = class {}) {
             this.tile.remove_entity(this);
             this.tile = null;
             return this;
+        }
+    }
+}
+
+function Leveler(Base = class {}) {
+    return class extends Base {
+        constructor(allows_step, tile, lvl) {
+            super(allows_step, tile);
+            this._lvl = lvl;
+        }
+
+        get level() {
+            return this._lvl;
         }
     }
 }
@@ -72,8 +85,8 @@ class Water extends Entity {
 }
 
 class Animal extends Mortal(Entity) {
-    constructor(tile) {
-        super(-Infinity, tile);
+    constructor(allows_step, tile) {
+        super(allows_step, tile);
     }
 
     go_to_tile(target_tile) {
@@ -83,10 +96,9 @@ class Animal extends Mortal(Entity) {
     }
 }
 
-class LandAnimal extends Animal {
+class LandAnimal extends Leveler(Animal) {
     constructor(tile, lvl = 0) {
-        super(tile);
-        this._lvl = lvl;
+        super(-Infinity, tile, lvl);
     }
 
     _grow_older() {
@@ -333,10 +345,6 @@ class LandAnimal extends Animal {
 
         return {death: !this._move(actor_class, prey_class)};
     }
-
-    get level() {
-        return this._lvl;
-    }
 }
 
 class Herbivore extends LandAnimal {
@@ -382,7 +390,7 @@ class Carnivore extends LandAnimal {
 
 class Protozoan extends Animal {
     constructor(tile) {
-        super(tile);
+        super(-Infinity, tile);
         this._time_to_live = Protozoan.config.time_to_live;
     }
 
@@ -423,9 +431,9 @@ class Protozoan extends Animal {
     }
 }
 
-class Vegetation extends Entity {
-    constructor(allows_step, tile) {
-        super(allows_step, tile);
+class Vegetation extends Leveler(Entity) {
+    constructor(allows_step, tile, level) {
+        super(allows_step, tile, level);
         this._ticks_to_reproduce = undefined;
     }
 
@@ -455,11 +463,7 @@ class Vegetation extends Entity {
 
 class RainForest extends Vegetation {
     constructor(tile) {
-        super(-Infinity, tile);
-    }
-
-    get level() {
-        return Infinity;
+        super(-Infinity, tile, Infinity);
     }
 }
 
@@ -469,9 +473,8 @@ class Plant extends Mortal(Vegetation) {
         const level = Math.min(lvl, cfg.max_level);
         const allows_step = Math.abs(lvl - cfg.max_level);
 
-        super(allows_step, tile);
+        super(allows_step, tile, level);
 
-        this._lvl = level;
         this.health = cfg.health[level];
         this._ticks_to_evolve = undefined;
     }
@@ -509,10 +512,6 @@ class Plant extends Mortal(Vegetation) {
     _evolve() {
         this._set_configs(this._lvl + 1); // lvlup;
         this._ticks_to_evolve = undefined;
-    }
-
-    get level() {
-        return this._lvl;
     }
 
     devolve() {
