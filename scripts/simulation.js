@@ -184,7 +184,7 @@ const simulation = function() {
 
         let survivors = entity_lists.get(hunter_class).filter(animal => {
             const {killed_prey, offspring, death} = animal.act();
-            
+
             if(death)
                 return false;
 
@@ -205,6 +205,18 @@ const simulation = function() {
         return tile_map.map(row => row.map(tile => tile.entity()));
     }
 
+    /**
+     * Return the entity located at the given coordinates.
+     * @method get_entity
+     * @param {Number} y Row number
+     * @param {Number} x Column number
+     * @return {Entity} Entity located at the given coordinates, or *undefined*
+     *                  if there is none.
+     */
+    function get_entity(y, x) {
+        return tile_map[y][x].entity();
+    }
+
     // explicit syntax b/c we define a getter
     return Object.create(Object.prototype, {
         'setup_tile_map': {
@@ -215,6 +227,9 @@ const simulation = function() {
         },
         'entity_map': {
             get: entity_map
+        },
+        'get_entity': {
+            value: get_entity
         }
     });
 }();

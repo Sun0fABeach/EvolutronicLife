@@ -15,6 +15,7 @@
   */
 const translator = function() {
     // TODO plant trees need to toggle
+    // TODO toggling needs to be completely reworked!
 
     function make_token_toggler() {
         let toggle = 0;
@@ -48,7 +49,7 @@ const translator = function() {
             const found_idx = display.tokens.indexOf(symbol);
             if(found_idx >= 0)
                 return constr.instance || new constr(null, found_idx);
-                /* some entities are handled as one shared instance as a
+                /* some entities can be handled as one shared instance as a
                    memory optimization */
         }
         return null;
@@ -65,7 +66,7 @@ const translator = function() {
                 }
             }
         }
-        return {token: ' ', css_class: undefined};
+        return {token: ' ', css_class: ''};
     }
 
     function parse_initial_map(map) {
@@ -90,5 +91,5 @@ const translator = function() {
         return html_map;
     }
 
-    return { parse_initial_map, build_html_map };
+    return { entity_to_token, parse_initial_map, build_html_map };
 }();

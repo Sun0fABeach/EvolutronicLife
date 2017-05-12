@@ -1,5 +1,7 @@
 "use strict";
 
+// TODO: there shall be a display module. main shouldn't do that stuff
+
 /**
  * Top level simulation control.
  * @module main
@@ -19,6 +21,8 @@ const main = function() {
     const min_step_duration = 100;
     let simulation_stopped = false;
     let current_timeout;
+    let watched_entity;
+    let num_map_cols;
 
     /**
      * Draw world on browser window.
@@ -26,12 +30,46 @@ const main = function() {
      * @private
      */
     function display_world() {
-        const html_map = translator.build_html_map(simulation.entity_map);
-        const main = document.querySelector("main");
-        const old_map = main.firstElementChild;
-        if(old_map.tagName.toLowerCase() === 'pre')
-            main.removeChild(old_map);
-        main.insertBefore(html_map, main.firstElementChild);
+        const new_map = translator.build_html_map(simulation.entity_map);
+        const world_container = document.getElementById("world");
+        const old_map = world_container.firstElementChild;
+        if(old_map)
+            world_container.removeChild(old_map);
+        world_container.appendChild(new_map);
+    }
+
+    /**
+     * Set a new watched entity and display it.
+     * @method set_watched_entity
+     * @param {Number} index_on_map Index n of the new watched entity as in
+     *                              child number n of its parent node.
+     */
+    function set_watched_entity(index_on_map) {
+        const y = Math.floor(index_on_map / num_map_cols);
+        const x = index_on_map % num_map_cols;
+        watched_entity = simulation.get_entity(y, x);
+        display_watched_entity();
+    }
+
+    /**
+     * Display the currently watched entity, or clear display if it died or
+     * there currently is no watched entity.
+     * @method display_watched_entity
+     * @private
+     */
+    function display_watched_entity() {
+        const tracker_display = document.getElementById("tracker_display");
+
+        if(!watched_entity || !watched_entity.in_simulation()) {
+            tracker_display.className = "";
+            tracker_display.innerHTML = "";
+            watched_entity = null;
+            return;
+        }
+
+        const {token, css_class} = translator.entity_to_token(watched_entity);
+        tracker_display.className = css_class || "";
+        tracker_display.innerHTML = token;
     }
 
     /**
@@ -43,6 +81,7 @@ const main = function() {
         current_timeout = setTimeout(loop, step_duration);
         simulation.update();
         display_world();
+        display_watched_entity();
     }
 
     /**
@@ -51,9 +90,11 @@ const main = function() {
      */
     function start_simulation() {
         const entity_map = translator.parse_initial_map(map);
+        num_map_cols = entity_map[0].length;
         simulation.setup_tile_map(entity_map);
-        user_ctrl.display_speed(step_duration);
+        user_ctrl.display_speed(step_duration);  // TODO: main should do this
         display_world();
+        display_watched_entity();
         setTimeout(loop, step_duration);
     }
 
@@ -105,6 +146,10 @@ const main = function() {
     }
 
     return {
-        start_simulation, slow_down_interval, speed_up_interval, stop_resume
+        start_simulation,
+        set_watched_entity,
+        slow_down_interval,
+        speed_up_interval,
+        stop_resume
     };
 }();

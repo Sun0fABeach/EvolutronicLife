@@ -22,53 +22,59 @@ pre {
   padding: 5px;
   letter-spacing: 1px;
   font-family: monospace;
-  cursor: default;
+  cursor: pointer;
 }
 pre > span {
   display: inline-block;
   width: 8.65px; /* prevents certain chars from breaking monospace */
   /*overflow-x: hidden;*/
 }
-pre > span.water {
+pre > span:hover {
+  outline: 1px solid white;
+}
+pre > span:active {
+  background-color: white;
+}
+
+.water {
   color: blue;
 }
-pre > span.beach {
+.beach {
   color: orange;
 }
-pre > span.protozoan {
+.protozoan {
   color: pink;
 }
-pre > span.rainforest {
+.rainforest {
   color: #1a421f;
 }
-pre > span.plant {
+.plant {
   color: darkgreen;
 }
-pre > span.herbivore {
+.herbivore {
   color: yellow;
 }
-pre > span.carnivore {
+.carnivore {
   color: red;
 }
 
 #control_panel {
   text-align: center;
-}
-
-#speed_ctrl {
-  display: inline-block;
   color: #b0acac;
 }
-#speed_ctrl > label {
+#control_panel > * {
+  vertical-align: middle;
+}
+#control_panel > label {
   font-size: 0.9em;
+  margin-left: 20px;
 }
 #steps_per_sec {
   margin-right: 20px;
   font-family: monospace;
   font-size: 1.1em;
 }
-
-input[type=button] {
+#control_panel > input[type=button] {
   background-color: black;
   border: none;
   outline: 1px solid #904723;
@@ -78,18 +84,41 @@ input[type=button] {
   margin-right: 20px;
   width: 82px;
 }
-input[type=button]:hover {
+#control_panel > input[type=button]:hover {
   outline-width: 2px;
 }
-input[type=button]:active {
+#control_panel > input[type=button]:active {
   color: white;
 }
-
-input[type=button][disabled] {
+#control_panel > input[type=button][disabled] {
   background-color: #151010;
   color: #868181;
   cursor: default;
 }
-input[type=button][disabled]:hover {
+#control_panel > input[type=button][disabled]:hover {
   outline-width: 1px;
+}
+#tracker_display {
+  display: inline-block;
+  width: 40px;
+  height: 45px;
+  margin-left: 10px;
+  margin-right: 30px;
+  background-color: #999966;
+  border: solid 2px #904723;
+  padding-top: 4px;
+  font-family: monospace;
+  font-size: 35px;
+  cursor: default;
+}
+#control_panel > table {
+  display: inline-block;
+  font-size: 0.8em;
+  text-align: left;
+}
+#control_panel > table th {
+  padding-right: 10px;
+}
+#control_panel > table td {
+  padding-right: 40px;
 }

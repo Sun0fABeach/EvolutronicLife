@@ -66,7 +66,6 @@ class Beach extends Entity {
         super(Infinity, tile);
     }
 }
-Beach.instance = new Beach(undefined);
 
 class Water extends Entity {
     constructor(tile) {
@@ -402,7 +401,7 @@ class Protozoan extends Animal {
     }
 
     _jump_on_beach() {
-        this.tile.pop_entity();
+        this.die();
         const constr = helpers.chance_in_percent(
             Protozoan.config.herby_evo_chance) ? Herbivore : Carnivore;
         return new constr(helpers.array_choice(this._adjacent_beaches), 0);
@@ -410,12 +409,14 @@ class Protozoan extends Animal {
 
     _move() {
         if(this._time_to_live-- === 0) {
-            this.tile.pop_entity();
+            this.die();
             return false;
         }
 
         const env = this.tile.env_rings[0];
-        const swimmable_tiles = env.filter((tile) => tile.entity(Water));
+        const swimmable_tiles = env.filter(
+            (tile) => tile.entity() instanceof Water
+        );
         if(swimmable_tiles.length === 0) {
             this.die();
             return false; // dies when it has nowhere to move

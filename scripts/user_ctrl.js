@@ -26,6 +26,9 @@ const user_ctrl = function() {
         faster_button.addEventListener("click", increase_speed);
         slower_button.addEventListener("click", decrease_speed);
         pause_button.addEventListener("click", stop_resume);
+        document.getElementById("world").addEventListener(
+            "click", track_entity
+        );
     }
 
     /**
@@ -85,7 +88,20 @@ const user_ctrl = function() {
     }
 
     /**
-     * Update the speed indicator.
+     * Event handler: track the clicked entity.
+     * @method track_entity
+     * @param {Event} event Mouse click event
+     * @private
+     */
+    function track_entity(event) {
+        const clicked = event.target;
+        main.set_watched_entity(
+            Array.from(clicked.parentNode.children).indexOf(clicked)
+        );
+    }
+
+    /**
+     * Update the speed indicator. // TODO: main should do this
      * @method display_speed
      * @param {Number} step_duration Current step duration in milliseconds
      */
