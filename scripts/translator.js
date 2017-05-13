@@ -14,20 +14,20 @@
   * @class translator
   */
 const translator = function() {
-    // TODO plant trees need to toggle
-    // TODO toggling needs to be completely reworked!
+    let animation_toggle = 0;
 
-    function make_token_toggler() {
-        let toggle = 0;
-        return (_, tokens) => {
-            const idx = toggle;
-            toggle = toggle === tokens.length-1 ?  0 : toggle + 1;
-            return tokens[idx];
-        }
+    function token_toggler(_, tokens) {
+        return tokens[animation_toggle];
     }
 
     function token_by_level(entity, tokens) {
         return tokens[entity.level];
+    }
+
+    function plant_token(plant, tokens) {
+        if(plant.level === 2)
+            return token_toggler(plant, tokens.slice(2));
+        return token_by_level(plant, tokens);
     }
 
     function constant_token(_, tokens) {
@@ -37,9 +37,9 @@ const translator = function() {
     const mapping = new Map([
         [Herbivore,     { tokens: 'җҖӜ',    get_token: token_by_level }],
         [Carnivore,     { tokens: 'ԅԇʡ',    get_token: token_by_level }],
-        [Plant,         { tokens: 'ʷʬϒY',   get_token: token_by_level }],
-        [RainForest,    { tokens: 'Ϋϔ',     get_token: make_token_toggler() }],
-        [Water,         { tokens: '∽~',     get_token: make_token_toggler() }],
+        [Plant,         { tokens: 'ʷʬYϒ',   get_token: plant_token }],
+        [RainForest,    { tokens: 'Ϋϔ',     get_token: token_toggler }],
+        [Water,         { tokens: '∽~',     get_token: token_toggler }],
         [Protozoan,     { tokens: '§',      get_token: constant_token }],
         [Beach,         { tokens: ':',      get_token: constant_token }]
     ]);
@@ -76,6 +76,8 @@ const translator = function() {
     }
 
     function build_html_map(entity_map) {
+        animation_toggle = animation_toggle === 0 ? 1 : 0;
+
         const html_map = document.createElement("pre");
         for(const ent_row of entity_map) {
             for(const ent of ent_row) {
