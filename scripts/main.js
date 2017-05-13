@@ -8,7 +8,7 @@
  * @main main
  * @requires translator
  * @requires simulation
- * @requires helpers
+ * @requires display
  */
 
 /**
@@ -26,17 +26,29 @@ const main = function() {
     let num_map_cols;
 
     /**
-     * Draw world on browser window.
-     * @method display_world
+     * Simulation loop, called in intervals.
+     * @method loop
      * @private
      */
-    function display_world() {
-        const new_map = translator.build_html_map(simulation.entity_map);
-        const world_container = document.getElementById("world");
-        const old_map = world_container.firstElementChild;
-        if(old_map)
-            world_container.removeChild(old_map);
-        world_container.appendChild(new_map);
+    function loop() {
+        current_timeout = setTimeout(loop, step_duration);
+        simulation.update();
+        display.update_world(simulation.entity_map);
+        display.update_watched_entity(watched_entity);
+    }
+
+    /**
+     * Start simulation.
+     * @method start_simulation
+     */
+    function start_simulation() {
+        const entity_map = translator.parse_initial_map(map);
+        num_map_cols = entity_map[0].length;
+        simulation.setup_tile_map(entity_map);
+        display.update_speed(step_duration);
+        display.update_world(simulation.entity_map);
+        display.update_watched_entity(watched_entity);
+        setTimeout(loop, step_duration);
     }
 
     /**
@@ -49,86 +61,38 @@ const main = function() {
         const y = Math.floor(index_on_map / num_map_cols);
         const x = index_on_map % num_map_cols;
         watched_entity = simulation.get_entity(y, x);
-        display_watched_entity();
-    }
-
-    /**
-     * Display the currently watched entity, or clear display if it died or
-     * there currently is no watched entity.
-     * @method display_watched_entity
-     * @private
-     */
-    function display_watched_entity() {
-        const tracker_display = document.getElementById("tracker_display");
-
-        if(!watched_entity || !watched_entity.in_simulation()) {
-            tracker_display.className = "";
-            tracker_display.innerHTML = "";
-            watched_entity = null;
-            return;
-        }
-
-        const {token, css_class} = translator.entity_to_token(watched_entity);
-        tracker_display.className = css_class || "";
-        tracker_display.innerHTML = token;
-    }
-
-    /**
-     * Simulation loop, called in intervals.
-     * @method loop
-     * @private
-     */
-    function loop() {
-        current_timeout = setTimeout(loop, step_duration);
-        simulation.update();
-        display_world();
-        display_watched_entity();
-    }
-
-    /**
-     * Start simulation.
-     * @method start_simulation
-     */
-    function start_simulation() {
-        const entity_map = translator.parse_initial_map(map);
-        num_map_cols = entity_map[0].length;
-        simulation.setup_tile_map(entity_map);
-        display_speed();
-        display_world();
-        display_watched_entity();
-        setTimeout(loop, step_duration);
-    }
-
-    /**
-     * Update the speed indicator.
-     * @method display_speed
-     */
-    function display_speed() {
-        const steps_per_sec = (1000 / step_duration).toFixed(2);
-        document.querySelector("#steps_per_sec").innerHTML =
-            helpers.pad_left(steps_per_sec, 5);
+        display.update_watched_entity(watched_entity);
     }
 
     /**
      * Slow down simulation.
      * @method slow_down_interval
-     * @return {Boolean} true if minimum speed reached, false otherwise
+     * @return {Object} Two-member object, containing:
+     * - step_duration: new duration in milliseconds
+     * - limit_reached: true if minimum speed reached, false otherwise
      */
     function slow_down_interval() {
         if(step_duration < max_step_duration)
             step_duration += step_change;
-        return step_duration == max_step_duration;
+        return {
+            step_duration, limit_reached: step_duration == max_step_duration
+        };
     }
 
     /**
      * Speed up simulation.
      * @method speed_up_interval
-     * @return {Boolean} true if maximum speed reached, false otherwise
+     * @return {Object} Two-member object, containing:
+     * - step_duration: new duration in milliseconds
+     * - limit_reached: true if maximum speed reached, false otherwise
+
      */
     function speed_up_interval() {
         if(step_duration > min_step_duration)
             step_duration -= step_change;
-        return step_duration == min_step_duration;
+        return {
+            step_duration, limit_reached: step_duration == min_step_duration
+        };
     }
 
     /**
@@ -151,7 +115,6 @@ const main = function() {
     return {
         start_simulation,
         set_watched_entity,
-        display_speed,
         slow_down_interval,
         speed_up_interval,
         stop_resume

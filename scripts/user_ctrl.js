@@ -1,9 +1,12 @@
 'use strict';
 
+// TODO: button dis/enabling done via display module ?
+
 /**
  * Event listeners for user input.
  * @module user_ctrl
  * @requires main
+ * @requires display
  */
 
  /**
@@ -37,7 +40,9 @@ const user_ctrl = function() {
      * @private
      */
     function decrease_speed(event) {
-        const disable_button = main.slow_down_interval();
+        const {
+            step_duration, limit_reached: disable_button
+        } = main.slow_down_interval();
 
         if(disable_button) {
             slower_button.setAttribute("disabled", "");
@@ -47,7 +52,7 @@ const user_ctrl = function() {
             faster_button.addEventListener("click", increase_speed);
         }
 
-        main.display_speed();
+        display.update_speed(step_duration);
     }
 
     /**
@@ -57,7 +62,9 @@ const user_ctrl = function() {
      * @private
      */
     function increase_speed(event) {
-        const disable_button = main.speed_up_interval();
+        const {
+            step_duration, limit_reached: disable_button
+        } = main.speed_up_interval();
 
         if(disable_button) {
             faster_button.setAttribute("disabled", "");
@@ -67,7 +74,7 @@ const user_ctrl = function() {
             slower_button.addEventListener("click", decrease_speed);
         }
 
-        main.display_speed();
+        display.update_speed(step_duration);
     }
 
     /**
