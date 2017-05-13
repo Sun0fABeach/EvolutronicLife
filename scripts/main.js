@@ -8,6 +8,7 @@
  * @main main
  * @requires translator
  * @requires simulation
+ * @requires helpers
  */
 
 /**
@@ -92,40 +93,42 @@ const main = function() {
         const entity_map = translator.parse_initial_map(map);
         num_map_cols = entity_map[0].length;
         simulation.setup_tile_map(entity_map);
-        user_ctrl.display_speed(step_duration);  // TODO: main should do this
+        display_speed();
         display_world();
         display_watched_entity();
         setTimeout(loop, step_duration);
     }
 
     /**
+     * Update the speed indicator.
+     * @method display_speed
+     */
+    function display_speed() {
+        const steps_per_sec = (1000 / step_duration).toFixed(2);
+        document.querySelector("#steps_per_sec").innerHTML =
+            helpers.pad_left(steps_per_sec, 5);
+    }
+
+    /**
      * Slow down simulation.
      * @method slow_down_interval
-     * @return {Object} Two-member object, containing:
-     * - step_duration: new duration in milliseconds
-     * - limit_reached: true if minimum speed reached, false otherwise
+     * @return {Boolean} true if minimum speed reached, false otherwise
      */
     function slow_down_interval() {
         if(step_duration < max_step_duration)
             step_duration += step_change;
-        return {
-            step_duration, limit_reached: step_duration == max_step_duration
-        };
+        return step_duration == max_step_duration;
     }
 
     /**
      * Speed up simulation.
      * @method speed_up_interval
-     * @return {Object} Two-member object, containing:
-     * - step_duration: new duration in milliseconds
-     * - limit_reached: true if maximum speed reached, false otherwise
+     * @return {Boolean} true if maximum speed reached, false otherwise
      */
     function speed_up_interval() {
         if(step_duration > min_step_duration)
             step_duration -= step_change;
-        return {
-            step_duration, limit_reached: step_duration == min_step_duration
-        };
+        return step_duration == min_step_duration;
     }
 
     /**
@@ -148,6 +151,7 @@ const main = function() {
     return {
         start_simulation,
         set_watched_entity,
+        display_speed,
         slow_down_interval,
         speed_up_interval,
         stop_resume

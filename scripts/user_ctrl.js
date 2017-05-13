@@ -4,7 +4,6 @@
  * Event listeners for user input.
  * @module user_ctrl
  * @requires main
- * @requires helpers
  */
 
  /**
@@ -38,9 +37,7 @@ const user_ctrl = function() {
      * @private
      */
     function decrease_speed(event) {
-        const {
-            step_duration, limit_reached: disable_button
-        } = main.slow_down_interval();
+        const disable_button = main.slow_down_interval();
 
         if(disable_button) {
             slower_button.setAttribute("disabled", "");
@@ -50,7 +47,7 @@ const user_ctrl = function() {
             faster_button.addEventListener("click", increase_speed);
         }
 
-        display_speed(step_duration);
+        main.display_speed();
     }
 
     /**
@@ -60,9 +57,7 @@ const user_ctrl = function() {
      * @private
      */
     function increase_speed(event) {
-        const {
-            step_duration, limit_reached: disable_button
-        } = main.speed_up_interval();
+        const disable_button = main.speed_up_interval();
 
         if(disable_button) {
             faster_button.setAttribute("disabled", "");
@@ -72,7 +67,7 @@ const user_ctrl = function() {
             slower_button.addEventListener("click", decrease_speed);
         }
 
-        display_speed(step_duration);
+        main.display_speed();
     }
 
     /**
@@ -100,22 +95,10 @@ const user_ctrl = function() {
         );
     }
 
-    /**
-     * Update the speed indicator. // TODO: main should do this
-     * @method display_speed
-     * @param {Number} step_duration Current step duration in milliseconds
-     */
-    function display_speed(step_duration) {
-        const steps_per_sec = (1000 / step_duration).toFixed(2);
-        document.querySelector("#steps_per_sec").innerHTML =
-            helpers.pad_left(steps_per_sec, 5);
-    }
-
-
     window.addEventListener("load", () => {
         setup_event_listeners();
         main.start_simulation();
     });
 
-    return { display_speed };
+    return {  };  // TODO this might not be needed
 }();
