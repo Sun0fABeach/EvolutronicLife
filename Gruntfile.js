@@ -1,3 +1,6 @@
+'use strict';
+/* globals module: false */
+
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -25,10 +28,10 @@ module.exports = function(grunt) {
                     Carnivore: true
                 }
             },
-            all: ['scripts/*.js']
+            all: ['*.js', 'scripts/**/*.js']
         },
         watch: {
-            files: ['scripts/*.js'],
+            files: ['*.js', 'scripts/**/*.js'],
             tasks: ['jshint']
         }
     });
@@ -37,4 +40,4 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.registerTask('default', ['watch']);
-}
+};
