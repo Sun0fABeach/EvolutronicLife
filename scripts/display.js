@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * HTML modification routines.
  * @module display

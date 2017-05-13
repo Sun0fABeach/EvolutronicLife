@@ -1,0 +1,29 @@
+{
+  "name": "evolife",
+  "version": "1.0.0",
+  "description": "critter simulation",
+  "main": "scripts/main.js",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-watch": "^1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sun0fABeach/EvolutronicLife.git"
+  },
+  "keywords": [
+    "simulation"
+  ],
+  "author": "markus appel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sun0fABeach/EvolutronicLife/issues"
+  },
+  "homepage": "https://github.com/Sun0fABeach/EvolutronicLife#readme"
+}

@@ -17,7 +17,7 @@ function Mortal(Base = class {}) {
             this.tile = null;
             return this;
         }
-    }
+    };
 }
 
 function Leveler(Base = class {}) {
@@ -30,7 +30,7 @@ function Leveler(Base = class {}) {
         get level() {
             return this._lvl;
         }
-    }
+    };
 }
 
 class Entity {
@@ -196,7 +196,7 @@ class LandAnimal extends Leveler(Animal) {
     }
 
     _move(own_class, prey_class) {
-        let target_tile = undefined;
+        let target_tile;
 
         if(this._is_horny())
             target_tile = this._route_to_mate(own_class);
@@ -285,9 +285,9 @@ class LandAnimal extends Leveler(Animal) {
      */
     _calculate_step(target) {
         const x_dir = (target.pos_x > this.pos_x) -
-                      (target.pos_x < this.pos_x)
+                      (target.pos_x < this.pos_x);
         const y_dir = (target.pos_y > this.pos_y) -
-                      (target.pos_y < this.pos_y)
+                      (target.pos_y < this.pos_y);
 
         if(y_dir == -1) {
             switch(x_dir) {
@@ -295,7 +295,7 @@ class LandAnimal extends Leveler(Animal) {
                 case 0:  return 1;
                 case 1:  return 2;
             }
-        } else if(y_dir == 0) {
+        } else if(y_dir === 0) {
             switch(x_dir) {
                 case -1: return 3;
                 case 1:  return 4;
@@ -540,11 +540,11 @@ Plant.config = {
     max_level: 2,
     health: [5, 10, 15],
     ticks_evo_range: [40, 100]
-}
+};
 Protozoan.config = {
     time_to_live: 20,
     herby_evo_chance: 80
-}
+};
 Herbivore.config = {
     max_level: 2,
     time_to_live: [50, 100, 150],
@@ -555,7 +555,7 @@ Herbivore.config = {
     attack: [5, 10, 15],
     lvlup_chance: 50,
     min_energy_replenish: 10
-}
+};
 Carnivore.config = {
     max_level: 2,
     time_to_live: [50, 100, 150],
@@ -565,4 +565,4 @@ Carnivore.config = {
     attack: [5, 10, 15],
     lvlup_chance: 50,
     min_energy_replenish: 10
-}
+};

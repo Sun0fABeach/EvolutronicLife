@@ -72,31 +72,31 @@ const simulation = function() {
     function calc_env_ring(tile_map, center_y, center_x, scope) {
         const env_ring = [];
 
-        let x_on_map, y_on_map = center_y - scope     //top ring row
+        let x_on_map, y_on_map = center_y - scope;     //top ring row
         for(let relative_x = -scope; relative_x <= scope; ++relative_x) {
             x_on_map = center_x + relative_x;
             add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope);
         }
 
-        x_on_map = center_x - scope     //left ring column
+        x_on_map = center_x - scope;     //left ring column
         for(let relative_y = -scope+1; relative_y < scope; ++relative_y) {
             y_on_map = center_y + relative_y;
             add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope);
         }
 
-        x_on_map = center_x + scope     //right ring column
+        x_on_map = center_x + scope;     //right ring column
         for(let relative_y = -scope+1; relative_y < scope; ++relative_y) {
             y_on_map = center_y + relative_y;
             add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope);
         }
 
-        y_on_map = center_y + scope     //bottom ring row
+        y_on_map = center_y + scope;     //bottom ring row
         for(let relative_x = -scope; relative_x <= scope; ++relative_x) {
             x_on_map = center_x + relative_x;
             add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope);
         }
 
-        return env_ring
+        return env_ring;
     }
 
     /**
