@@ -1,7 +1,5 @@
 "use strict";
 
-// TODO: there shall be a display module. main shouldn't do that stuff
-
 /**
  * Top level simulation control.
  * @module main
@@ -33,14 +31,14 @@ const main = function() {
     function loop() {
         current_timeout = setTimeout(loop, step_duration);
         simulation.update();
-        if(watched_entity && !watched_entity.in_simulation())
-            watched_entity = null;
-        display.update_world(simulation.entity_map);
-        display.update_watched_entity(watched_entity);
+        const watched_idx = check_watched_entity();
+        display.update_world(simulation.entity_map, watched_idx);
+        display.update_watched_info(watched_entity);
     }
 
     /**
-     * Start simulation.
+     * Start simulation. This includes parsing the map, displaying everything
+     * and finally initiating the game loop.
      * @method start_simulation
      */
     function start_simulation() {
@@ -49,12 +47,13 @@ const main = function() {
         simulation.setup_tile_map(entity_map);
         display.update_speed(step_duration);
         display.update_world(simulation.entity_map);
-        display.update_watched_entity(null);
+        display.update_watched_info(null);
         setTimeout(loop, step_duration);
     }
 
     /**
-     * Set a new watched entity and display it.
+     * Set a new watched entity and display it. If there is no watched entity
+     * at the given position, the entity tracking info will be cleared.
      * @method set_watched_entity
      * @param {Number} index_on_map Index n of the new watched entity as in
      *                              child number n of its parent node.
@@ -63,7 +62,32 @@ const main = function() {
         const y = Math.floor(index_on_map / num_map_cols);
         const x = index_on_map % num_map_cols;
         watched_entity = simulation.get_entity(y, x);
-        display.update_watched_entity(watched_entity);
+        if(watched_entity)
+            display.highlight_watched_on_map(index_on_map);
+        display.update_watched_info(watched_entity);
+    }
+
+    /**
+     * Check if the currently watched entity is still alive and if not, set
+     * global variable *watched_entity* to *null*. Return the map index of the
+     * watched entity, or *undefined* if there is none.
+     * @method check_watched_entity
+     * @private
+     * @return {Number} Index n of the watched entity as in child number n of
+     *                  its parent node, or *undefined* if there is no watched
+     *                  entity.
+     */
+    function check_watched_entity() {
+        let watched_idx;
+        if(watched_entity) {
+            if(!watched_entity.in_simulation()) {
+                watched_entity = null;
+            } else {
+                watched_idx = watched_entity.pos_y * num_map_cols +
+                                watched_entity.pos_x;
+            }
+        }
+        return watched_idx;
     }
 
     /**

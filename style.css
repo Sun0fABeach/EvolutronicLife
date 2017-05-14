@@ -32,8 +32,8 @@ pre > span {
 pre > span:hover {
   outline: 1px solid white;
 }
-pre > span:active {
-  background-color: white;
+pre > #tracked {
+  outline: 1px solid red;
 }
 
 .water {

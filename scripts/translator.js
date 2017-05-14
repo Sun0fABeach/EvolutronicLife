@@ -75,8 +75,9 @@ const translator = function() {
         );
     }
 
-    function build_html_map(entity_map) {
+    function build_html_map(entity_map, tracked_idx=undefined) {
         animation_toggle = animation_toggle === 0 ? 1 : 0;
+        let element_counter = 0;
 
         const html_map = document.createElement("pre");
         for(const ent_row of entity_map) {
@@ -85,6 +86,8 @@ const translator = function() {
                 const {token, css_class} = entity_to_token(ent);
                 if(css_class)
                     span.className = css_class;
+                if(element_counter++ === tracked_idx)
+                    span.id = "tracked";
                 span.appendChild(document.createTextNode(token));
                 html_map.appendChild(span);
             }
