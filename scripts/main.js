@@ -33,6 +33,8 @@ const main = function() {
     function loop() {
         current_timeout = setTimeout(loop, step_duration);
         simulation.update();
+        if(watched_entity && !watched_entity.in_simulation())
+            watched_entity = null;
         display.update_world(simulation.entity_map);
         display.update_watched_entity(watched_entity);
     }
@@ -47,7 +49,7 @@ const main = function() {
         simulation.setup_tile_map(entity_map);
         display.update_speed(step_duration);
         display.update_world(simulation.entity_map);
-        display.update_watched_entity(watched_entity);
+        display.update_watched_entity(null);
         setTimeout(loop, step_duration);
     }
 
@@ -85,7 +87,6 @@ const main = function() {
      * @return {Object} Two-member object, containing:
      * - step_duration: new duration in milliseconds
      * - limit_reached: true if maximum speed reached, false otherwise
-
      */
     function speed_up_interval() {
         if(step_duration > min_step_duration)

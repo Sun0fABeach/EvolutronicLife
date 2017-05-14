@@ -34,10 +34,9 @@
      function update_watched_entity(watched_entity) {
          const tracker_display = document.getElementById("tracker_display");
 
-         if(!watched_entity || !watched_entity.in_simulation()) {
+         if(!watched_entity) {
              tracker_display.className = "";
              tracker_display.innerHTML = "";
-             watched_entity = null;
              return;
          }
 
