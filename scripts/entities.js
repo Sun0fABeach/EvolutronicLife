@@ -7,8 +7,6 @@
  * @requires tile
  */
 
-// TODO combine ttl and grow_older method with mortal mixin
-
 function Mortal(Base = class {}) {
     return class extends Base {
         die() {
@@ -102,6 +100,14 @@ class Animal extends Mortal(Entity) {
         this._tile = target_tile;
     }
 
+    _grow_older() {
+        if(this._time_to_live-- === 0) {
+            this.die();
+            return false;
+        }
+        return true;
+    }
+
     get time_to_live() {
         return this._time_to_live;
     }
@@ -111,14 +117,6 @@ class LandAnimal extends Leveler(Animal) {
     constructor(tile, lvl = 0) {
         super(-Infinity, tile, lvl);
         this._rdy_to_copulate = false;
-    }
-
-    _grow_older() {
-        if(this._time_to_live-- === 0) {
-            this.die();
-            return false;
-        }
-        return true;
     }
 
     _is_hungry() {
@@ -440,10 +438,8 @@ class Protozoan extends Animal {
     }
 
     _move() {
-        if(this._time_to_live-- === 0) {
-            this.die();
+        if(!this._grow_older())
             return false;
-        }
 
         const env = this._tile.env_rings[0];
         const swimmable_tiles = env.filter(
