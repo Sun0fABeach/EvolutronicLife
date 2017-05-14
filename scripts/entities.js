@@ -7,14 +7,13 @@
  * @requires tile
  */
 
-// TODO 'instance' as static class methods (even via mixin?)
-// TODO getters and setters? where sensible?
+// TODO combine ttl and grow_older method with mortal mixin
 
 function Mortal(Base = class {}) {
     return class extends Base {
         die() {
-            this.tile.remove_entity(this);
-            this.tile = null;
+            this._tile.remove_entity(this);
+            this._tile = null;
             return this;
         }
     };
@@ -35,22 +34,31 @@ function Leveler(Base = class {}) {
 
 class Entity {
     constructor(allows_step, tile = null) {
-        this.allows_step = allows_step;
+        this._allows_step = allows_step;
         if(tile) {
-            this.tile = tile;
+            this._tile = tile;
             tile.push_entity(this);
         }
     }
 
     get pos_y() {
-        return this.tile.pos_y;
+        return this._tile.pos_y;
     }
     get pos_x() {
-        return this.tile.pos_x;
+        return this._tile.pos_x;
+    }
+    get tile() {
+        return this._tile;
+    }
+    set tile(new_tile) {
+        this._tile = new_tile;
+    }
+    get allows_step() {
+        return this._allows_step;
     }
 
     in_simulation() {
-        return !!this.tile;
+        return !!this._tile;
     }
 }
 
@@ -73,8 +81,8 @@ class Water extends Entity {
     }
 
     _try_spawning() {
-        if(helpers.chance_in_percent(1) && !this.tile.entity(Protozoan))
-            return new Protozoan(this.tile);
+        if(helpers.chance_in_percent(1) && !this._tile.entity(Protozoan))
+            return new Protozoan(this._tile);
         return null;
     }
 
@@ -89,15 +97,20 @@ class Animal extends Mortal(Entity) {
     }
 
     go_to_tile(target_tile) {
-        this.tile.pop_entity();
+        this._tile.pop_entity();
         target_tile.push_entity(this);
-        this.tile = target_tile;
+        this._tile = target_tile;
+    }
+
+    get time_to_live() {
+        return this._time_to_live;
     }
 }
 
 class LandAnimal extends Leveler(Animal) {
     constructor(tile, lvl = 0) {
         super(-Infinity, tile, lvl);
+        this._rdy_to_copulate = false;
     }
 
     _grow_older() {
@@ -113,7 +126,7 @@ class LandAnimal extends Leveler(Animal) {
     }
 
     _hunt(prey_class) {
-        const env = this.tile.env_rings[0];
+        const env = this._tile.env_rings[0];
         const prey_list = env.reduce((found, tile) => {
             const prey = tile.entity(prey_class);
             if(prey) found.push(prey);
@@ -150,15 +163,15 @@ class LandAnimal extends Leveler(Animal) {
             this._rdy_to_copulate = false;
     }
 
-    _is_horny() {
+    is_horny() {
         return this._rdy_to_copulate;
     }
 
     _try_reproduction(mate_class) {
-        const env = this.tile.env_rings[0];
+        const env = this._tile.env_rings[0];
         const mating_partners = env.reduce((partner_list, tile) => {
-            const partner = tile.entity(mate_class, this.level);
-            if(partner && partner._is_horny())
+            const partner = tile.entity(mate_class, this._lvl);
+            if(partner && partner.is_horny())
                 partner_list.push(partner);
             return partner_list;
         }, []);
@@ -174,12 +187,12 @@ class LandAnimal extends Leveler(Animal) {
         this._have_sex(helpers.array_choice(mating_partners));
 
         if(helpers.chance_in_percent(this._cfg.lvlup_chance) &&
-            this.level != this._cfg.max_level &&
-            birthplace.walkable(this.level + 1)
+            this._lvl != this._cfg.max_level &&
+            birthplace.walkable(this._lvl + 1)
         ){
-            return new mate_class(birthplace, this.level + 1);
-        } else if(birthplace.walkable(this.level)) {
-            return new mate_class(birthplace, this.level);
+            return new mate_class(birthplace, this._lvl + 1);
+        } else if(birthplace.walkable(this._lvl)) {
+            return new mate_class(birthplace, this._lvl);
         } else {
             return this._devolve(mate_class, birthplace);
         }
@@ -198,9 +211,9 @@ class LandAnimal extends Leveler(Animal) {
     _move(own_class, prey_class) {
         let target_tile;
 
-        if(this._is_horny())
+        if(this.is_horny())
             target_tile = this._route_to_mate(own_class);
-        else if(this._is_hungry() || this.level === 2)
+        else if(this._is_hungry() || this._lvl === 2)
             target_tile = this._route_to_prey(prey_class);
 
         // if entity is neither hungry nor horny, or the step towards a mate
@@ -217,9 +230,9 @@ class LandAnimal extends Leveler(Animal) {
         return true;
     }
 
-    _route_to_mate(mate_class, lvl) {
+    _route_to_mate(mate_class) {
         const possible_targets = this._search_target_candidates(
-            mate_class, this.lvl
+            mate_class, this._lvl
         );
         if(possible_targets.length === 0)
             return null;
@@ -245,7 +258,7 @@ class LandAnimal extends Leveler(Animal) {
     _search_target_candidates(target_class, lvl = undefined) {
         const possible_targets = [];
 
-        for(const ring of this.tile.env_rings.slice(1, this._view_range)) {
+        for(const ring of this._tile.env_rings.slice(1, this._view_range)) {
             for(const tile of ring) {
                 const entity = tile.entity(target_class, lvl);
                 if(entity)
@@ -260,11 +273,11 @@ class LandAnimal extends Leveler(Animal) {
 
     _make_step_choice(target_candidates) {
         const wanted_target = helpers.array_choice(target_candidates);
-        const immediate_env = this.tile.env_rings[0];
+        const immediate_env = this._tile.env_rings[0];
         const step_position = this._calculate_step(wanted_target);
         const target_tile = immediate_env[step_position];
 
-        if(target_tile.walkable(this.level))
+        if(target_tile.walkable(this._lvl))
             return target_tile;
 
         return null;
@@ -310,9 +323,9 @@ class LandAnimal extends Leveler(Animal) {
     }
 
     _random_step() {
-        const env = this.tile.env_rings[0];
+        const env = this._tile.env_rings[0];
         const walkable_tiles = env.filter(
-            tile => tile.walkable(this.level)
+            tile => tile.walkable(this._lvl)
         );
         if(walkable_tiles.length > 0)
             return helpers.array_choice(walkable_tiles);
@@ -335,7 +348,7 @@ class LandAnimal extends Leveler(Animal) {
         } else {
             this._consume_from_food_reserves();
 
-            if(this._is_horny()) {
+            if(this.is_horny()) {
                 const newborn = this._try_reproduction(actor_class);
                 if(newborn)
                     return {offspring: newborn};
@@ -343,6 +356,25 @@ class LandAnimal extends Leveler(Animal) {
         }
 
         return {death: !this._move(actor_class, prey_class)};
+    }
+
+    get view_range() {
+        return this._view_range;
+    }
+    get energy() {
+        return this._energy;
+    }
+    get food() {
+        return this._food;
+    }
+    get attack() {
+        return this._attack;
+    }
+    get health() {
+        return this._health;
+    }
+    set health(new_health) {
+        this._health = new_health;
     }
 }
 
@@ -358,7 +390,7 @@ class Herbivore extends LandAnimal {
         this._time_to_live = cfg.time_to_live[level];
         this._energy = cfg.energy[level];
         this._food = cfg.food[level];
-        this.health = cfg.health[level];
+        this._health = cfg.health[level];
         this._attack = cfg.attack[level];
     }
 
@@ -394,7 +426,7 @@ class Protozoan extends Animal {
     }
 
     _beach_reachable() {
-        const env = this.tile.env_rings[0];
+        const env = this._tile.env_rings[0];
         // save as instance var for later use by _jump_on_beach
         this._adjacent_beaches = env.filter((tile) => tile.walkable());
         return this._adjacent_beaches.length > 0;
@@ -413,7 +445,7 @@ class Protozoan extends Animal {
             return false;
         }
 
-        const env = this.tile.env_rings[0];
+        const env = this._tile.env_rings[0];
         const swimmable_tiles = env.filter(
             (tile) => tile.entity() instanceof Water
         );
@@ -439,7 +471,7 @@ class Vegetation extends Leveler(Entity) {
     }
 
     _try_growth() {
-        const env = this.tile.env_rings[0];
+        const env = this._tile.env_rings[0];
         const free_tiles = env.filter(tile => tile.empty());
         if(free_tiles.length > 0) {
             if(this._ticks_to_reproduce === undefined) {
@@ -476,14 +508,14 @@ class Plant extends Mortal(Vegetation) {
 
         super(allows_step, tile, level);
 
-        this.health = cfg.health[level];
+        this._health = cfg.health[level];
         this._ticks_to_evolve = undefined;
     }
 
     _set_configs(lvl) {
         this._lvl = Math.min(lvl, Plant.config.max_level);
-        this.allows_step = Math.abs(this._lvl - Plant.config.max_level);
-        this.health = Plant.config.health[this._lvl];
+        this._allows_step = Math.abs(this._lvl - Plant.config.max_level);
+        this._health = Plant.config.health[this._lvl];
         this._ticks_to_evolve = undefined;
     }
 
@@ -491,10 +523,10 @@ class Plant extends Mortal(Vegetation) {
         if(this._lvl === Plant.config.max_level)
             return false;
 
-        const env = this.tile.env_rings[0];
+        const env = this._tile.env_rings[0];
         if(env.every(tile => {
             const adjacent_veg = tile.entity(Vegetation);
-            return adjacent_veg && adjacent_veg.level >= this.level ||
+            return adjacent_veg && adjacent_veg.level >= this._lvl ||
                    tile.entity(Border);
         })) {
             if(this._ticks_to_evolve === undefined) {
@@ -517,7 +549,7 @@ class Plant extends Mortal(Vegetation) {
 
     devolve() {
         for(let lvl = 0; lvl < Plant.config.health.length-1; ++lvl) {
-            if(this.health <= Plant.config.health[lvl]) {
+            if(this._health <= Plant.config.health[lvl]) {
                 this._set_configs(lvl);
                 return;
             }
@@ -530,6 +562,13 @@ class Plant extends Mortal(Vegetation) {
             return {};
         }
         return super.act();
+    }
+
+    get health() {
+        return this._health;
+    }
+    set health(new_health) {
+        this._health = new_health;
     }
 }
 
