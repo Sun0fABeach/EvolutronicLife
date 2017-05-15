@@ -120,5 +120,5 @@ pre > #tracked {
   padding-right: 10px;
 }
 #control_panel > table td {
-  padding-right: 40px;
+  width: 90px;
 }
