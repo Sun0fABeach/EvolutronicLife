@@ -18,14 +18,7 @@ module.exports = function(grunt) {
                     user_ctrl: true,
                     helpers: true,
                     Tile: true,
-                    Border: true,
-                    Water: true,
-                    Beach: true,
-                    Plant: true,
-                    RainForest: true,
-                    Protozoan: true,
-                    Herbivore: true,
-                    Carnivore: true
+                    entities: true
                 }
             },
             all: ['*.js', 'scripts/**/*.js']

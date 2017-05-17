@@ -4,7 +4,7 @@
  * The simulated map consists of a grid of tiles that all the entities can
  * move onto or out of.
  * @module tile
- * @requires entities
+ * @requires helpers
  */
 
 class Tile {

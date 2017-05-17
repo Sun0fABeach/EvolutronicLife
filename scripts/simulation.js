@@ -14,14 +14,14 @@
 const simulation = function() {
 
     let tile_map = [];
-    const entity_lists = new Map([
-        [ RainForest, [] ],
-        [ Plant, [] ],
-        [ Water, [] ],
-        [ Beach, [] ],
-        [ Protozoan, [] ],
-        [ Herbivore, [] ],
-        [ Carnivore, [] ]
+    const entity_lists = new Map([   // TODO: try to set with iteration over entities object properties
+        [ entities.RainForest, [] ],
+        [ entities.Plant, [] ],
+        [ entities.Water, [] ],
+        [ entities.Beach, [] ],
+        [ entities.Protozoan, [] ],
+        [ entities.Herbivore, [] ],
+        [ entities.Carnivore, [] ]
     ]);
 
     function setup_tile_map(entity_map) {
@@ -119,20 +119,21 @@ const simulation = function() {
         if(tile_map[pos_y] && tile_map[pos_y][pos_x])
             env_ring.push(tile_map[pos_y][pos_x]);
         else if(scope === 1)
-            env_ring.push(Border.dummy.tile);
+            env_ring.push(entities.Border.dummy.tile);
     }
 
     function update() {
-        landanimal_action(Carnivore, Herbivore);
-        landanimal_action(Herbivore, Plant);
+        landanimal_action(entities.Carnivore, entities.Herbivore);
+        landanimal_action(entities.Herbivore, entities.Plant);
         vegetation_action();
         protozoan_action();
         water_action();
     }
 
     function vegetation_action() {
-        const plant_list = entity_lists.get(Plant);
-        const veggy_list = entity_lists.get(RainForest).concat(plant_list);
+        const plant_list = entity_lists.get(entities.Plant);
+        const veggy_list = entity_lists.get(entities.RainForest)
+                                       .concat(plant_list);
 
         const new_plants = veggy_list.reduce((offspring_list, veggy) => {
             const {offspring} = veggy.act();
@@ -141,16 +142,16 @@ const simulation = function() {
             return offspring_list;
         }, []);
 
-        entity_lists.set(Plant, plant_list.concat(new_plants));
+        entity_lists.set(entities.Plant, plant_list.concat(new_plants));
     }
 
     function protozoan_action() {
-        const protozoan_list = entity_lists.get(Protozoan);
+        const protozoan_list = entity_lists.get(entities.Protozoan);
 
         const dead_protos = protozoan_list.reduce((dead_list, proto) => {
             const {offspring: new_animal, death} = proto.act();
             if(new_animal) {
-                [Herbivore, Carnivore].forEach((constr) => {
+                [entities.Herbivore, entities.Carnivore].forEach((constr) => {
                     if(new_animal instanceof constr)
                         entity_lists.get(constr).push(new_animal);
                 });
@@ -166,7 +167,7 @@ const simulation = function() {
     }
 
     function water_action() {
-        const water_list = entity_lists.get(Water);
+        const water_list = entity_lists.get(entities.Water);
 
         const new_protozoans = water_list.reduce((offspring_list, water) => {
             const {offspring} = water.act();
@@ -175,8 +176,10 @@ const simulation = function() {
             return offspring_list;
         }, []);
 
-        const protozoan_list = entity_lists.get(Protozoan);
-        entity_lists.set(Protozoan, protozoan_list.concat(new_protozoans));
+        const protozoan_list = entity_lists.get(entities.Protozoan);
+        entity_lists.set(
+            entities.Protozoan, protozoan_list.concat(new_protozoans)
+        );
     }
 
     function landanimal_action(hunter_class, prey_class) {

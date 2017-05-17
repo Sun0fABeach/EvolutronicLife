@@ -35,13 +35,13 @@ const translator = function() {
     }
 
     const mapping = new Map([
-        [Herbivore,     { tokens: 'җҖӜ',    get_token: token_by_level }],
-        [Carnivore,     { tokens: 'ԅԇʡ',    get_token: token_by_level }],
-        [Plant,         { tokens: 'ʷʬYϒ',   get_token: plant_token }],
-        [RainForest,    { tokens: 'Ϋϔ',     get_token: token_toggler }],
-        [Water,         { tokens: '∽~',     get_token: token_toggler }],
-        [Protozoan,     { tokens: '§',      get_token: constant_token }],
-        [Beach,         { tokens: ':',      get_token: constant_token }]
+        [entities.Herbivore,  { tokens: 'җҖӜ',  get_token: token_by_level }],
+        [entities.Carnivore,  { tokens: 'ԅԇʡ',  get_token: token_by_level }],
+        [entities.Plant,      { tokens: 'ʷʬYϒ', get_token: plant_token }],
+        [entities.RainForest, { tokens: 'Ϋϔ',   get_token: token_toggler }],
+        [entities.Water,      { tokens: '∽~',   get_token: token_toggler }],
+        [entities.Protozoan,  { tokens: '§',    get_token: constant_token }],
+        [entities.Beach,      { tokens: ':',    get_token: constant_token }]
     ]);
 
     function token_to_entity(symbol) {
