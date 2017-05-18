@@ -45,10 +45,10 @@ const translator = function() {
     ]);
 
     function token_to_entity(symbol) {
-        for(const [constr, display] of mapping.entries()) {
+        for(const [klass, display] of mapping.entries()) {
             const found_idx = display.tokens.indexOf(symbol);
             if(found_idx >= 0)
-                return constr.instance || new constr(null, found_idx);
+                return klass.instance || new klass(null, found_idx);
                 /* some entities can be handled as one shared instance as a
                    memory optimization */
         }
@@ -57,11 +57,11 @@ const translator = function() {
 
     function entity_to_token(entity) {
         if(entity) {
-            for(const [constr, display] of mapping.entries()) {
-                if(entity instanceof constr) {
+            for(const [klass, display] of mapping.entries()) {
+                if(entity instanceof klass) {
                     return {
                         token: display.get_token(entity, display.tokens),
-                        css_class: constr.name.toLowerCase()
+                        css_class: klass.name.toLowerCase()
                     };
                 }
             }

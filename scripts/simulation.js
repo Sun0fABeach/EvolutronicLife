@@ -14,15 +14,11 @@
 const simulation = function() {
 
     let tile_map = [];
-    const entity_lists = new Map([   // TODO: try to set with iteration over entities object properties
-        [ entities.RainForest, [] ],
-        [ entities.Plant, [] ],
-        [ entities.Water, [] ],
-        [ entities.Beach, [] ],
-        [ entities.Protozoan, [] ],
-        [ entities.Herbivore, [] ],
-        [ entities.Carnivore, [] ]
-    ]);
+
+    const entity_lists = new Map();
+    for(var class_name in entities)
+        if(entities.hasOwnProperty(class_name))
+            entity_lists.set(entities[class_name], []);
 
     function setup_tile_map(entity_map) {
         tile_map = entity_map.map(function(entity_row, y) {
@@ -31,8 +27,8 @@ const simulation = function() {
                 if(entity) {
                     tile.push_entity(entity);
                     entity.tile = tile;
-                    entity_lists.forEach((list, constr) => {
-                        if(entity instanceof constr)
+                    entity_lists.forEach((list, klass) => {
+                        if(entity instanceof klass)
                             list.push(entity);
                     });
                 }
@@ -151,9 +147,9 @@ const simulation = function() {
         const dead_protos = protozoan_list.reduce((dead_list, proto) => {
             const {offspring: new_animal, death} = proto.act();
             if(new_animal) {
-                [entities.Herbivore, entities.Carnivore].forEach((constr) => {
-                    if(new_animal instanceof constr)
-                        entity_lists.get(constr).push(new_animal);
+                [entities.Herbivore, entities.Carnivore].forEach((klass) => {
+                    if(new_animal instanceof klass)
+                        entity_lists.get(klass).push(new_animal);
                 });
                 dead_list.push(proto);
             } else if(death) {
