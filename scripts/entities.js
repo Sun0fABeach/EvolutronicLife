@@ -162,15 +162,11 @@ const entities = function() {
                 this._rdy_to_copulate = false;
         }
 
-        is_horny() {
-            return this._rdy_to_copulate;
-        }
-
         _try_reproduction(mate_class) {
             const env = this._tile.env_rings[0];
             const mating_partners = env.reduce((partner_list, tile) => {
                 const partner = tile.entity(mate_class, this._lvl);
-                if(partner && partner.is_horny())
+                if(partner && partner.is_horny)
                     partner_list.push(partner);
                 return partner_list;
             }, []);
@@ -210,7 +206,7 @@ const entities = function() {
         _move(own_class, prey_class) {
             let target_tile;
 
-            if(this.is_horny())
+            if(this.is_horny)
                 target_tile = this._route_to_mate(own_class);
             else if(this._is_hungry() || this._lvl === 2)
                 target_tile = this._route_to_prey(prey_class);
@@ -347,7 +343,7 @@ const entities = function() {
             } else {
                 this._consume_from_food_reserves();
 
-                if(this.is_horny()) {
+                if(this.is_horny) {
                     const newborn = this._try_reproduction(actor_class);
                     if(newborn)
                         return {offspring: newborn};
@@ -365,6 +361,9 @@ const entities = function() {
         }
         get food() {
             return this._food;
+        }
+        get is_horny() {
+            return this._rdy_to_copulate;
         }
         get attack() {
             return this._attack;
@@ -410,6 +409,7 @@ const entities = function() {
             this._time_to_live = cfg.time_to_live[level];
             this._energy = cfg.energy[level];
             this._food = cfg.food[level];
+            this._health = cfg.health[level];
             this._attack = cfg.attack[level];
         }
 
@@ -598,6 +598,7 @@ const entities = function() {
         view_range: [4, 6, 8],
         food: [10, 10, 10],
         energy: [10, 20, 30],
+        health: [5, 10, 15],
         attack: [5, 10, 15],
         lvlup_chance: 50,
         min_energy_replenish: 10

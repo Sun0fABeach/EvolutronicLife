@@ -43,12 +43,25 @@
      }
 
      /**
-      * Display the currently watched entity, or clear display if there is none.
+      * Display the currently watched entity in the control panel by showing
+      * the token and displaying its stats in the table.
       * @method display_watched_entity
       * @param {Entity} watched_entity Currently tracked entity. If *null*,
       *                                the tracking info will be cleared.
       */
      function update_watched_info(watched_entity) {
+         _update_token_display(watched_entity);
+         _update_watched_table(watched_entity);
+     }
+
+     /**
+      * Display the currently watched entity, or clear display if there is none.
+      * @method _update_token_display
+      * @private
+      * @param {Entity} watched_entity Currently tracked entity. If *null*,
+      *                                the token display will be cleared.
+      */
+     function _update_token_display(watched_entity) {
          const tracker_display = document.getElementById("tracker_display");
 
          if(!watched_entity) {
@@ -60,6 +73,46 @@
          const {token, css_class} = translator.entity_to_token(watched_entity);
          tracker_display.className = css_class;
          tracker_display.innerHTML = token;
+     }
+
+     /**
+      * Display the currently watched entity's stats in the table, or clear
+      * the table info if there is none.
+      * @method _update_watched_table
+      * @private
+      * @param {Entity} watched_entity Currently tracked entity. If *null*,
+      *                                the stats table will be cleared.
+      */
+     function _update_watched_table(watched_entity) {
+         const stats_table = document.querySelector("#control_panel > table");
+         const fields = Array.from(stats_table.getElementsByTagName("td"));
+         const name_field = helpers.remove_from_array(
+             fields, stats_table.querySelector("#type")
+         );
+
+         if(watched_entity) {
+             for(const class_name in entities)
+                 if(entities.hasOwnProperty(class_name))
+                     if(watched_entity instanceof entities[class_name])
+                         name_field.innerHTML = class_name;
+         } else {
+             name_field.innerHTML = "-";
+         }
+
+         for(const field of fields) {
+             if(!watched_entity || watched_entity[field.id] === undefined ||
+                                   watched_entity[field.id] === Infinity) {
+                field.innerHTML = "-";
+             } else {
+                // field html ids match the entity property names
+                let value = watched_entity[field.id];
+                if(field.id === "level") // level starts at 0 internally
+                    ++value;
+                else if(field.id === "is_horny") // if true, value is a boolean
+                    value = ["No", "Yes"][0+value]; // cast to int for indexing
+                field.innerHTML = value;
+             }
+         }
      }
 
      /**

@@ -16,7 +16,7 @@ const simulation = function() {
     let tile_map = [];
 
     const entity_lists = new Map();
-    for(var class_name in entities)
+    for(const class_name in entities)
         if(entities.hasOwnProperty(class_name))
             entity_lists.set(entities[class_name], []);
 
