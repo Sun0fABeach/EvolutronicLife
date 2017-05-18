@@ -29,7 +29,7 @@ const user_ctrl = function() {
         slower_button.addEventListener("click", decrease_speed);
         pause_button.addEventListener("click", stop_resume);
         document.getElementById("world").addEventListener(
-            "click", track_entity
+            "mouseup", track_entity
         );
     }
 
