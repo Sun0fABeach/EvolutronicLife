@@ -29,17 +29,22 @@
      }
 
      /**
-      * Highlight watched entity on the world map.
+      * Highlight watched entity on the world map and clear previous
+      * highlighting.
       * @method highlight_watched_on_map
       * @param {Number} watched_idx Index n of the watched entity as in
-      *                             child number n of its parent node.
+      *                             child number n of its parent node. Set to
+      *                             *undefined* if you just want to clear
+      *                             current highlighting.
       */
      function highlight_watched_on_map(watched_idx) {
          const currently_highlighted = document.getElementById("tracked");
          if(currently_highlighted)
             currently_highlighted.id = "";
-         const map = document.querySelector("pre");
-         map.children[watched_idx].id = "tracked";
+         if(watched_idx !== undefined) {
+             const map = document.querySelector("pre");
+             map.children[watched_idx].id = "tracked";
+         }
      }
 
      /**

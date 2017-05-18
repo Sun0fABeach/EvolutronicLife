@@ -62,8 +62,9 @@ const main = function() {
         const y = Math.floor(index_on_map / num_map_cols);
         const x = index_on_map % num_map_cols;
         watched_entity = simulation.get_entity(y, x);
-        if(watched_entity)
-            display.highlight_watched_on_map(index_on_map);
+        if(!watched_entity)
+            index_on_map = undefined;
+        display.highlight_watched_on_map(index_on_map);
         display.update_watched_info(watched_entity);
     }
 
