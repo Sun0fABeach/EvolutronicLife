@@ -9,11 +9,7 @@
  * @requires display
  */
 
- /**
-  * Singleton object containing the event listeners.
-  * @class user_ctrl
-  */
-const user_ctrl = function() {
+(function() {
     let slower_button, faster_button, pause_button, step_button;
 
     /**
@@ -126,6 +122,4 @@ const user_ctrl = function() {
         setup_event_listeners();
         main.start_simulation();
     });
-
-    return {  };  // TODO this might not be needed
-}();
+})();
