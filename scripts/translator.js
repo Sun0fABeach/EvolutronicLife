@@ -56,16 +56,13 @@ const translator = function() {
     }
 
     function entity_to_token(entity) {
-        if(entity) {
-            for(const [klass, display] of mapping.entries()) {
-                if(entity instanceof klass) {
+        if(entity)
+            for(const [klass, display] of mapping.entries())
+                if(entity instanceof klass)
                     return {
                         token: display.get_token(entity, display.tokens),
                         css_class: klass.name.toLowerCase()
                     };
-                }
-            }
-        }
         return {token: ' ', css_class: ''};
     }
 

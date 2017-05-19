@@ -99,7 +99,7 @@
              for(const class_name in entities)
                  if(entities.hasOwnProperty(class_name))
                      if(watched_entity instanceof entities[class_name])
-                         name_field.innerHTML = class_name;
+                        { name_field.innerHTML = class_name; break; }
          } else {
              name_field.innerHTML = "-";
          }

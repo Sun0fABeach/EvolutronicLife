@@ -1,7 +1,5 @@
 "use strict";
 
-// TODO: carnivores (maybe also herbies?) die strange deaths
-
 /**
  * Game entity class hierarchy.
  * @module entities

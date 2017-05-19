@@ -82,17 +82,15 @@
      * @private
      */
     function stop_resume(event) {
-        let button_label;
         if(main.stop_resume()) {
-            button_label = "Pause";
+            pause_button.setAttribute("value", "Pause");
             step_button.setAttribute("disabled", "");
             step_button.removeEventListener("click", do_step);
         } else {
-            button_label = "Resume";
+            pause_button.setAttribute("value", "Resume");
             step_button.removeAttribute("disabled");
             step_button.addEventListener("click", do_step);
         }
-        pause_button.setAttribute("value", button_label);
     }
 
     /**
