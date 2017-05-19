@@ -14,7 +14,7 @@
   * @class user_ctrl
   */
 const user_ctrl = function() {
-    let slower_button, faster_button, pause_button;
+    let slower_button, faster_button, pause_button, step_button;
 
     /**
      * Install event listeners.
@@ -25,9 +25,11 @@ const user_ctrl = function() {
         faster_button = document.getElementById("faster");
         slower_button = document.getElementById("slower");
         pause_button = document.getElementById("pause");
+        step_button = document.getElementById("step");
         faster_button.addEventListener("click", increase_speed);
         slower_button.addEventListener("click", decrease_speed);
         pause_button.addEventListener("click", stop_resume);
+        step_button.addEventListener("click", do_step);
         document.getElementById("world").addEventListener(
             "mouseup", track_entity
         );
@@ -84,9 +86,27 @@ const user_ctrl = function() {
      * @private
      */
     function stop_resume(event) {
-        pause_button.setAttribute(
-            "value", main.stop_resume() ? "Pause" : "Resume"
-        );
+        let button_label;
+        if(main.stop_resume()) {
+            button_label = "Pause";
+            step_button.setAttribute("disabled", "");
+            step_button.removeEventListener("click", do_step);
+        } else {
+            button_label = "Resume";
+            step_button.removeAttribute("disabled");
+            step_button.addEventListener("click", do_step);
+        }
+        pause_button.setAttribute("value", button_label);
+    }
+
+    /**
+     * Event handler: move simulation one step forward.
+     * @method do_step
+     * @param {Event} event Mouse click event
+     * @private
+     */
+    function do_step(event) {
+        main.step();
     }
 
     /**

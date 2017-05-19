@@ -74,28 +74,32 @@ pre > #tracked {
   font-family: monospace;
   font-size: 1.1em;
 }
-#control_panel > input[type=button] {
+#button_container {
+  display: inline-block;
+  width: 215px;
+}
+#button_container > input[type=button] {
   background-color: black;
   border: none;
   outline: 1px solid #904723;
   color: #b0acac;
   cursor: pointer;
   padding: 8px 16px;
-  margin-right: 20px;
+  margin: 5px 20px 5px 0;
   width: 82px;
 }
-#control_panel > input[type=button]:hover {
+#button_container > input[type=button]:hover {
   outline-width: 2px;
 }
-#control_panel > input[type=button]:active {
+#button_container > input[type=button]:active {
   color: white;
 }
-#control_panel > input[type=button][disabled] {
+#button_container > input[type=button][disabled] {
   background-color: #151010;
   color: #868181;
   cursor: default;
 }
-#control_panel > input[type=button][disabled]:hover {
+#button_container > input[type=button][disabled]:hover {
   outline-width: 1px;
 }
 #tracker_display {

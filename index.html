@@ -19,9 +19,12 @@
       <div id="world"></div>
       <div id="control_panel">
         <label>Steps per second: </label><span id="steps_per_sec"></span>
-        <input type="button" id="slower" name="slower" value="Slower">
-        <input type="button" id="faster" name="faster" value="Faster">
-        <input type="button" id="pause" name="pause" value="Pause">
+        <div id="button_container">
+          <input type="button" id="slower" name="slower" value="Slower">
+          <input type="button" id="pause" name="pause" value="Pause">
+          <input type="button" id="faster" name="faster" value="Faster">
+          <input type="button" id="step" name="step" value="Step" disabled>
+        </div>
         <label>Tracked: </label>
         <div id="tracker_display">Ӝ</div>
         <table>

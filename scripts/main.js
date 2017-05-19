@@ -24,16 +24,25 @@ const main = function() {
     let num_map_cols;
 
     /**
+     * Do one simulation step and display it.
+     * @method step
+     * @private
+     */
+    function step() {
+        simulation.update();
+        const watched_idx = check_watched_entity();
+        display.update_world(simulation.entity_map, watched_idx);
+        display.update_watched_info(watched_entity);
+    }
+
+    /**
      * Simulation loop, called in intervals.
      * @method loop
      * @private
      */
     function loop() {
         current_timeout = setTimeout(loop, step_duration);
-        simulation.update();
-        const watched_idx = check_watched_entity();
-        display.update_world(simulation.entity_map, watched_idx);
-        display.update_watched_info(watched_entity);
+        step();
     }
 
     /**
@@ -140,6 +149,7 @@ const main = function() {
 
     return {
         start_simulation,
+        step,
         set_watched_entity,
         slow_down_interval,
         speed_up_interval,
