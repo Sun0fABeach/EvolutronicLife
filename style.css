@@ -14,6 +14,8 @@ main {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  text-align: center;
+  height: 660px;
 }
 pre {
   background-color: #999966;
@@ -59,8 +61,9 @@ pre > #tracked {
 }
 
 #control_panel {
-  text-align: center;
   color: #b0acac;
+  margin-bottom: 10px;
+  display: none;
 }
 #control_panel > * {
   vertical-align: middle;
@@ -74,16 +77,18 @@ pre > #tracked {
   font-family: monospace;
   font-size: 1.1em;
 }
+input[type=button] {
+  cursor: pointer;
+  border: none;
+}
 #button_container {
   display: inline-block;
   width: 215px;
 }
 #button_container > input[type=button] {
   background-color: black;
-  border: none;
   outline: 1px solid #904723;
   color: #b0acac;
-  cursor: pointer;
   padding: 8px 16px;
   margin: 5px 20px 5px 0;
   width: 82px;
@@ -125,4 +130,17 @@ pre > #tracked {
 }
 #control_panel > table td {
   width: 90px;
+}
+
+#toggle_ctrls {
+  margin-top: 10px;
+  background-color: #151010;
+  outline: none;
+  width: 152px;
+  padding: 8px 10px;
+  color: #904723;
+}
+#toggle_ctrls:hover {
+  outline: 1px solid #904723;
+  background-color: black;
 }

@@ -10,7 +10,7 @@
  */
 
 (function() {
-    let slower_button, faster_button, pause_button, step_button;
+    let slower_button, faster_button, pause_button, step_button, toggle_ctrls;
 
     /**
      * Install event listeners.
@@ -22,10 +22,12 @@
         slower_button = document.getElementById("slower");
         pause_button = document.getElementById("pause");
         step_button = document.getElementById("step");
+        toggle_ctrls = document.getElementById("toggle_ctrls");
         faster_button.addEventListener("click", increase_speed);
         slower_button.addEventListener("click", decrease_speed);
         pause_button.addEventListener("click", stop_resume);
         step_button.addEventListener("click", do_step);
+        toggle_ctrls.addEventListener("click", toggle_ctrl_panel);
         document.getElementById("world").addEventListener(
             "mouseup", track_entity
         );
@@ -101,6 +103,23 @@
      */
     function do_step(event) {
         main.step();
+    }
+
+    /**
+     * Event handler: show or hide control panel.
+     * @method toggle_ctrl_panel
+     * @param {Event} event Mouse click event
+     * @private
+     */
+    function toggle_ctrl_panel(event) {
+        let ctrl_panel = document.getElementById("control_panel");
+        if(ctrl_panel.style.display === "") {
+            ctrl_panel.style.display = "block";
+            toggle_ctrls.setAttribute("value", "Hide Control Panel");
+        } else {
+            ctrl_panel.style.display = "";
+            toggle_ctrls.setAttribute("value", "Show Control Panel");
+        }
     }
 
     /**
