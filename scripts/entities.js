@@ -4,7 +4,6 @@
  * Game entity class hierarchy.
  * @module entities
  * @requires helpers
- * @requires tile
  */
 
 const entities = function() {
@@ -66,7 +65,6 @@ const entities = function() {
             super(-Infinity, tile);
         }
     }
-    Border.dummy = new Border(new Tile(undefined, undefined));
 
     class Beach extends Entity {
         constructor(tile) {

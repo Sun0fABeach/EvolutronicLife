@@ -114,8 +114,11 @@ const simulation = function() {
     function add_environment_tile(env_ring, tile_map, pos_y, pos_x, scope) {
         if(tile_map[pos_y] && tile_map[pos_y][pos_x])
             env_ring.push(tile_map[pos_y][pos_x]);
-        else if(scope === 1)
+        else if(scope === 1) {
+            if(!entities.Border.dummy)
+                entities.Border.dummy = new entities.Border(new Tile());
             env_ring.push(entities.Border.dummy.tile);
+        }
     }
 
     function update() {
