@@ -108,8 +108,10 @@ const main = function() {
      * - limit_reached: true if minimum speed reached, false otherwise
      */
     function slow_down_interval() {
-        if(step_duration < max_step_duration)
+        if(step_duration < max_step_duration) {
             step_duration += step_change;
+            display.update_speed(step_duration);
+        }
         return {
             step_duration, limit_reached: step_duration == max_step_duration
         };
@@ -123,8 +125,10 @@ const main = function() {
      * - limit_reached: true if maximum speed reached, false otherwise
      */
     function speed_up_interval() {
-        if(step_duration > min_step_duration)
+        if(step_duration > min_step_duration) {
             step_duration -= step_change;
+            display.update_speed(step_duration);
+        }
         return {
             step_duration, limit_reached: step_duration == min_step_duration
         };

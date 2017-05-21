@@ -4,6 +4,7 @@
  * HTML modification routines.
  * @module display
  * @requires helpers
+ * @requires translator
  */
 
 /**

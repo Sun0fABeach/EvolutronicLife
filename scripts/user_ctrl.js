@@ -6,7 +6,6 @@
  * Event listeners for user input.
  * @module user_ctrl
  * @requires main
- * @requires display
  */
 
 (function() {
@@ -51,8 +50,6 @@
             faster_button.removeAttribute("disabled");
             faster_button.addEventListener("click", increase_speed);
         }
-
-        display.update_speed(step_duration);
     }
 
     /**
@@ -73,8 +70,6 @@
             slower_button.removeAttribute("disabled");
             slower_button.addEventListener("click", decrease_speed);
         }
-
-        display.update_speed(step_duration);
     }
 
     /**
