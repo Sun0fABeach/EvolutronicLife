@@ -14,7 +14,7 @@
  const display = function() {
      /**
       * Draw world on browser window.
-      * @method display_world
+      * @method update_world
       * @param {Array} entity_map Entity map to translate and display
       * @param {Number} [watched_idx=undefined] Index n of the watched entity
       *                 as in child number n of its parent node. *undefined*
@@ -51,7 +51,7 @@
      /**
       * Display the currently watched entity in the control panel by showing
       * the token and displaying its stats in the table.
-      * @method display_watched_entity
+      * @method update_watched_info
       * @param {Entity} watched_entity Currently tracked entity. If *null*,
       *                                the tracking info will be cleared.
       */

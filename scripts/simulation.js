@@ -12,7 +12,6 @@
   * @class simulation
   */
 const simulation = function() {
-
     let tile_map = [];
 
     const entity_lists = new Map();
@@ -20,6 +19,11 @@ const simulation = function() {
         if(entities.hasOwnProperty(class_name))
             entity_lists.set(entities[class_name], []);
 
+    /**
+     * Build up an internal tile map, based on the given entity map.
+     * @method setup_tile_map
+     * @param {Array} entity_map 2D array containing rows of entity objects
+     */
     function setup_tile_map(entity_map) {
         tile_map = entity_map.map(function(entity_row, y) {
             return entity_row.map(function(entity, x) {
@@ -38,6 +42,16 @@ const simulation = function() {
         setup_env_rings(tile_map);
     }
 
+    /**
+     * For each tile in the given tile map, set up multiple environment tile
+     * rings. Each of these rings is an array containing the surrounding tiles
+     * of a certain distance. These tiles can be inspected by entities to do
+     * their path finding.
+     * @method setup_env_rings
+     * @private
+     * @param {Array} tile_map 2D array containing rows of tiles
+     * @param {Number} [num_rings=8] number of environment rings
+     */
     function setup_env_rings(tile_map, num_rings = 8) {
         tile_map.forEach(function(tile_row, y) {
             tile_row.forEach(function(tile, x) {
@@ -121,6 +135,11 @@ const simulation = function() {
         }
     }
 
+    /**
+     * Let each entity make a move. This effectively advances the simulation
+     * on step forward.
+     * @method update
+     */
     function update() {
         landanimal_action(entities.Carnivore, entities.Herbivore);
         landanimal_action(entities.Herbivore, entities.Plant);
@@ -203,6 +222,12 @@ const simulation = function() {
         entity_lists.set(hunter_class, survivors.concat(offspring_list));
     }
 
+    /**
+     * Return the current simulation state as a map of entity objects. Positions
+     * that hold no entity will be represented as *undefined*.
+     * @method entity_map
+     * @return {Array} 2D array containing rows of entity objects.
+     */
     function entity_map() {
         return tile_map.map(row => row.map(tile => tile.entity()));
     }
