@@ -26,11 +26,22 @@ module.exports = function(grunt) {
         watch: {
             files: ['*.js', 'scripts/**/*.js'],
             tasks: ['jshint']
+        },
+        yuidoc: {
+            compile: {
+                name: 'Evolutronic Life',
+                description: 'Documentation of modules, classes and methods',
+                options: {
+                    paths: 'scripts/',
+                    outdir: 'doc/'
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-yuidoc');
 
     grunt.registerTask('default', ['watch']);
 };
