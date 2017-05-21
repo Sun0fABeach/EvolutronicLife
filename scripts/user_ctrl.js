@@ -85,11 +85,11 @@
      */
     function stop_resume(event) {
         if(main.stop_resume()) {
-            pause_button.setAttribute("value", "Pause");
+            pause_button.innerHTML = "Pause";
             step_button.setAttribute("disabled", "");
             step_button.removeEventListener("click", do_step);
         } else {
-            pause_button.setAttribute("value", "Resume");
+            pause_button.innerHTML = "Resume";
             step_button.removeAttribute("disabled");
             step_button.addEventListener("click", do_step);
         }
@@ -115,10 +115,10 @@
         let ctrl_panel = document.getElementById("control_panel");
         if(ctrl_panel.style.display === "") {
             ctrl_panel.style.display = "block";
-            toggle_ctrls.setAttribute("value", "Hide Control Panel");
+            toggle_ctrls.innerHTML = "Hide Control Panel";
         } else {
             ctrl_panel.style.display = "";
-            toggle_ctrls.setAttribute("value", "Show Control Panel");
+            toggle_ctrls.innerHTML = "Show Control Panel";
         }
     }
 
