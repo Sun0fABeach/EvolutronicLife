@@ -36,12 +36,20 @@ module.exports = function(grunt) {
                     outdir: 'doc/'
                 }
             }
+        },
+        connect: {
+            server: {
+                options: {
+                    keepalive: true
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
+    grunt.loadNpmTasks('grunt-contrib-connect');
 
     grunt.registerTask('default', ['watch']);
 };
