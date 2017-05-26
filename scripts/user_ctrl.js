@@ -1,5 +1,3 @@
-'use strict';
-
 // TODO: button dis/enabling done via display module ?
 
 /**
@@ -9,6 +7,8 @@
  */
 
 (function() {
+    'use strict';
+
     let slower_button, faster_button, pause_button, step_button, toggle_ctrls;
 
     /**

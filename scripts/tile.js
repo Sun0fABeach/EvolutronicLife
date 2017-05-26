@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * The simulated map consists of a grid of tiles that all the entities can
  * move onto or out of.

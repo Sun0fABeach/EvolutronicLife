@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * The translator is responsible for parsing the initial map in order to set
  * up the internal game logic data structures, as well as building an html map
@@ -14,6 +12,8 @@
   * @class translator
   */
 const translator = function() {
+    "use strict";
+
     let animation_toggle = 0;
 
     function token_toggler(_, tokens) {

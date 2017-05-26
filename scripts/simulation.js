@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Simulation logic.
  * @module simulation
@@ -12,6 +10,8 @@
   * @class simulation
   */
 const simulation = function() {
+    "use strict";
+
     let tile_map = [];
 
     const entity_lists = new Map();

@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * HTML modification routines.
  * @module display
@@ -12,6 +10,8 @@
  * @class display
  */
  const display = function() {
+     "use strict";
+
      /**
       * Draw world on browser window.
       * @method update_world

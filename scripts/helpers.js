@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * General helper functions.
  * @module helpers
@@ -10,6 +8,8 @@
  * @class helpers
  */
 const helpers = function() {
+    'use strict';
+
     /**
      * Generate a random integer in a specified range.
      * @method random_in_range

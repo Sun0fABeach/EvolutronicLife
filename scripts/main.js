@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Top level simulation control.
  * @module main
@@ -14,6 +12,8 @@
  * @class main
  */
 const main = function() {
+    "use strict";
+
     let step_duration = 500;
     const step_change = 100;
     const max_step_duration = 1000;
@@ -26,7 +26,6 @@ const main = function() {
     /**
      * Do one simulation step and display it.
      * @method step
-     * @private
      */
     function step() {
         simulation.update();

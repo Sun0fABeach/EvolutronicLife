@@ -1,14 +1,12 @@
-'use strict';
-/* globals module: false */
-
 module.exports = function(grunt) {
+    'use strict';
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
             options: {
                 esversion: 6,
                 browser: true,
-                strict: 'global',
                 globals: {
                     map: true,
                     main: true,

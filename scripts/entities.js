@@ -1,4 +1,3 @@
-"use strict";
 
 /**
  * Game entity class hierarchy.
@@ -7,6 +6,8 @@
  */
 
 const entities = function() {
+    "use strict";
+
     function Mortal(Base = class {}) {
         return class extends Base {
             die() {
