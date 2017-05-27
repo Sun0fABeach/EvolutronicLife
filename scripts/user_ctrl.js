@@ -25,7 +25,11 @@
         faster_button.addEventListener("click", increase_speed);
         slower_button.addEventListener("click", decrease_speed);
         pause_button.addEventListener("click", stop_resume);
-        step_button.addEventListener("click", do_step);
+
+        /* disable this button via javascript here, b/c for some reason,
+           firefox doesn't respect the disabled attribute in html */
+        step_button.setAttribute("disabled", "");
+
         toggle_ctrls.addEventListener("click", toggle_ctrl_panel);
         document.getElementById("world").addEventListener(
             "mouseup", track_entity
