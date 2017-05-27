@@ -19,11 +19,20 @@
       <div id="world"></div>
       <div id="control_panel">
         <label>Steps per second: </label><span id="steps_per_sec"></span>
-        <div id="button_container">
-          <button type="button" id="slower">Slower</button>
-          <button type="button" id="pause">Pause</button>
-          <button type="button" id="faster">Faster</button>
-          <button type="button" id="step" disabled>Step</button>
+        <div id="speed_ctrl_container">
+          <button type="button" class="ctrl_button" id="slower">Slower</button>
+          <button type="button" class="ctrl_button" id="pause">Pause</button>
+          <button type="button" class="ctrl_button" id="faster">Faster</button>
+          <button type="button" class="ctrl_button" id="step" disabled>Step</button>
+        </div>
+        <div id="kill_switch_container">
+          <select>
+            <option selected>Herbivore</option>
+            <option>Carnivore</option>
+            <option>Protozoan</option>
+            <option>Plant</option>
+          </select>
+          <button type="button" class="ctrl_button" id="kill">Kill All</button>
         </div>
         <label>Tracked: </label>
         <div id="tracker_display">Ӝ</div>
@@ -34,7 +43,7 @@
             <th>Level</th>
             <td id="level">3</td>
             <th>Time to Live</th>
-            <td id="time_to_live">32</td>
+            <td id="time_to_live" class="last_col">32</td>
           </tr>
           <tr>
             <th>Food</th>
@@ -42,7 +51,7 @@
             <th>Energy</th>
             <td id="energy">10</td>
             <th>Health</th>
-            <td id="health">15</td>
+            <td id="health" class="last_col">15</td>
           </tr>
           <tr>
             <th>Attack</th>
@@ -50,7 +59,7 @@
             <th>Horny</th>
             <td id="is_horny">Yes</td>
             <th>View Range</th>
-            <td id="view_range">8</td>
+            <td id="view_range" class="last_col">8</td>
           </tr>
         </table>
       </div>

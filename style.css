@@ -60,6 +60,10 @@ pre > #tracked {
   color: red;
 }
 
+button {
+  cursor: pointer;
+  border: none;
+}
 #control_panel {
   color: #b0acac;
   margin-bottom: 10px;
@@ -70,43 +74,58 @@ pre > #tracked {
 }
 #control_panel > label {
   font-size: 0.9em;
-  margin-left: 20px;
 }
 #steps_per_sec {
   margin-right: 20px;
   font-family: monospace;
   font-size: 1.1em;
 }
-button {
-  cursor: pointer;
-  border: none;
-}
-#button_container {
+#speed_ctrl_container {
   display: inline-block;
   width: 215px;
 }
-#button_container > button {
+#speed_ctrl_container > .ctrl_button {
+  margin: 5px 20px 5px 0;
+}
+.ctrl_button {
   background-color: black;
   outline: 1px solid #904723;
-  color: #b0acac;
+  color: inherit;
   padding: 8px 16px;
-  margin: 5px 20px 5px 0;
   width: 82px;
 }
-#button_container > button:hover {
+.ctrl_button:hover {
   outline-width: 2px;
 }
-#button_container > button:active {
+.ctrl_button:active {
   color: white;
 }
-#button_container > button[disabled] {
+.ctrl_button[disabled] {
   background-color: #151010;
   color: #868181;
   cursor: default;
 }
-#button_container > button[disabled]:hover {
+.ctrl_button[disabled]:hover {
   outline-width: 1px;
 }
+
+#kill_switch_container {
+  display: inline-block;
+  width: 120px;
+  margin-right: 40px;
+  padding: 5px;
+}
+#kill_switch_container > select {
+  padding: 5px;
+  margin-bottom: 12px;
+  background-color: inherit;
+  color: inherit;
+  border: solid 1px #b0acac;
+}
+#kill_switch_container option {
+  background-color: #151010;
+}
+
 #tracker_display {
   display: inline-block;
   width: 40px;
@@ -129,14 +148,16 @@ button {
   padding-right: 10px;
 }
 #control_panel > table td {
-  width: 90px;
+  width: 80px;
+}
+#control_panel > table td.last_col {
+  width: 40px;
 }
 
 #toggle_ctrls {
   margin-top: 10px;
-  background-color: #151010;
+  background-color: inherit;
   outline: none;
-  width: 152px;
   padding: 8px 10px;
   color: #904723;
 }
