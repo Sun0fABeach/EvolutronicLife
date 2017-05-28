@@ -9,7 +9,8 @@
 (function() {
     'use strict';
 
-    let slower_button, faster_button, pause_button, step_button, toggle_ctrls;
+    let slower_button, faster_button, pause_button,
+        step_button, kill_button, kill_select, toggle_ctrls;
 
     /**
      * Install event listeners.
@@ -21,10 +22,13 @@
         slower_button = document.getElementById("slower");
         pause_button = document.getElementById("pause");
         step_button = document.getElementById("step");
+        kill_button = document.getElementById("kill");
+        kill_select = document.getElementById("kill_options");
         toggle_ctrls = document.getElementById("toggle_ctrls");
         faster_button.addEventListener("click", increase_speed);
         slower_button.addEventListener("click", decrease_speed);
         pause_button.addEventListener("click", stop_resume);
+        kill_button.addEventListener("click", kill_entities);
 
         /* disable this button via javascript here, b/c for some reason,
            firefox doesn't respect the disabled attribute in html */
@@ -102,6 +106,16 @@
      */
     function do_step(event) {
         main.step();
+    }
+
+    /**
+     * Event handler: mkill all entities of the selected type.
+     * @method kill_entities
+     * @param {Event} event Mouse click event
+     * @private
+     */
+    function kill_entities(event) {
+        main.kill_all_of(kill_options.value);
     }
 
     /**

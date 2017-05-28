@@ -244,6 +244,18 @@ const simulation = function() {
         return tile_map[y][x].entity();
     }
 
+    /**
+     * Kill all entities of the given type.
+     * @method kill_entity_type
+     * @param {String} type_name Class name of the entity type to kill
+     */
+    function kill_entity_type(type_name) {
+        const entity_class = entities[type_name];
+        for(const entity of entity_lists.get(entity_class))
+            entity.die();
+        entity_lists.set(entity_class, []);
+    }
+
     // explicit syntax b/c we define a getter
     return Object.create(Object.prototype, {
         'setup_tile_map': {
@@ -257,6 +269,9 @@ const simulation = function() {
         },
         'get_entity': {
             value: get_entity
+        },
+        'kill_entity_type': {
+            value: kill_entity_type
         }
     });
 }();

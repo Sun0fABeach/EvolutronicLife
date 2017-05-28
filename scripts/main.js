@@ -24,14 +24,23 @@ const main = function() {
     let num_map_cols;
 
     /**
+     * Display current simulation state.
+     * @private
+     * @method display_step
+     */
+    function display_step() {
+        const watched_idx = check_watched_entity();
+        display.update_world(simulation.entity_map, watched_idx);
+        display.update_watched_info(watched_entity);
+    }
+
+    /**
      * Do one simulation step and display it.
      * @method step
      */
     function step() {
         simulation.update();
-        const watched_idx = check_watched_entity();
-        display.update_world(simulation.entity_map, watched_idx);
-        display.update_watched_info(watched_entity);
+        display_step();
     }
 
     /**
@@ -150,12 +159,23 @@ const main = function() {
         }
     }
 
+    /**
+     * KIll all entities of the given type and display the result.
+     * @method kill_all_of
+     * @param {String} entity_type Type of entity to kill
+     */
+    function kill_all_of(entity_type) {
+        simulation.kill_entity_type(entity_type);
+        display_step();
+    }
+
     return {
         start_simulation,
         step,
         set_watched_entity,
         slow_down_interval,
         speed_up_interval,
-        stop_resume
+        stop_resume,
+        kill_all_of
     };
 }();
