@@ -24,13 +24,15 @@ const main = function() {
     let num_map_cols;
 
     /**
-     * Display current simulation state.
+     * Display current simulation state (map and tracking table).
+     * @param {Boolean} [is_new_step=true] Whether the state to display is a new
+     *                                     step in the simulation
      * @private
-     * @method display_step
+     * @method display_simulation_state
      */
-    function display_step() {
+    function display_simulation_state(is_new_step=true) {
         const watched_idx = check_watched_entity();
-        display.update_world(simulation.entity_map, watched_idx);
+        display.update_world(simulation.entity_map, is_new_step, watched_idx);
         display.update_watched_info(watched_entity);
     }
 
@@ -40,7 +42,7 @@ const main = function() {
      */
     function step() {
         simulation.update();
-        display_step();
+        display_simulation_state();
     }
 
     /**
@@ -63,8 +65,7 @@ const main = function() {
         num_map_cols = entity_map[0].length;
         simulation.setup_tile_map(entity_map);
         display.update_speed(step_duration);
-        display.update_world(simulation.entity_map);
-        display.update_watched_info(null);
+        display_simulation_state(false);
         setTimeout(loop, step_duration);
     }
 
@@ -166,7 +167,7 @@ const main = function() {
      */
     function kill_all_of(entity_type) {
         simulation.kill_entity_type(entity_type);
-        display_step();
+        display_simulation_state(false);
     }
 
     return {

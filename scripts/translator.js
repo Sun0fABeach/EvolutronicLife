@@ -72,8 +72,10 @@ const translator = function() {
         );
     }
 
-    function build_html_map(entity_map, tracked_idx=undefined) {
-        animation_toggle = animation_toggle === 0 ? 1 : 0;
+    function build_html_map(entity_map, do_toggle, tracked_idx=undefined) {
+        if(do_toggle)
+            animation_toggle = animation_toggle === 0 ? 1 : 0;
+
         let element_counter = 0;
 
         const html_map = document.createElement("pre");

@@ -16,12 +16,16 @@
       * Draw world on browser window.
       * @method update_world
       * @param {Array} entity_map Entity map to translate and display
+      * @param {Boolean} do_toggle Whether the entity tokens should toggle on
+      *                            this update
       * @param {Number} [watched_idx=undefined] Index n of the watched entity
       *                 as in child number n of its parent node. *undefined*
       *                 if there is no watched entity.
       */
-     function update_world(entity_map, watched_idx=undefined) {
-         const new_map = translator.build_html_map(entity_map, watched_idx);
+     function update_world(entity_map, do_toggle, watched_idx=undefined) {
+         const new_map = translator.build_html_map(
+             entity_map, do_toggle, watched_idx
+         );
          const world_container = document.getElementById("world");
          const old_map = world_container.firstElementChild;
          if(old_map)
