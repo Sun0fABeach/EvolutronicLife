@@ -44,6 +44,14 @@ const translator = function() {
         [entities.Beach,      { tokens: ':',    get_token: constant_token }]
     ]);
 
+    /**
+     * Return instance of an entity represented by the given token.
+     * @method token_to_entity
+     * @private
+     * @param {String} symbol Token representing an entity
+     * @return {Entity} Instance of an entity represented by the given token,
+     *                  or *null*, if token is unknown.
+     */
     function token_to_entity(symbol) {
         for(const [klass, display] of mapping.entries()) {
             const found_idx = display.tokens.indexOf(symbol);
@@ -55,6 +63,12 @@ const translator = function() {
         return null;
     }
 
+    /**
+     * Return an object containing display information for the given entity.
+     * @method entity_to_token
+     * @param {Entity} entity Instance of an entity
+     * @return {Object} Display information for given entity (token, css class).
+     */
     function entity_to_token(entity) {
         if(entity)
             for(const [klass, display] of mapping.entries())
@@ -66,12 +80,30 @@ const translator = function() {
         return {token: ' ', css_class: ''};
     }
 
+    /**
+     * Build an entity map out of a token map.
+     * @method parse_initial_map
+     * @param {Array} map 2D array representing a token map
+     * @return {Array} 2D array containing entity instances.
+     */
     function parse_initial_map(map) {
         return map.map(
             line => line.split('').map(token => token_to_entity(token))
         );
     }
 
+    /**
+     * Build HTML string representing a token map out of the given entity map.
+     * @method build_html_map
+     * @param {Array} entity_map 2D array containing entities
+     * @param {Boolean} do_toggle True if token toggling shall happend when
+     *                            constructing the map, false otherwise.
+     * @param {Number} [tracked_idx=undefined] Index n of the entity to
+     *                 highlight as in child number n of its parent node.
+     *                 *undefined* if there is no entity to highlight.
+     * @return {Array} HTML string representing a token map to be displayed
+     *                 by inserting it into the DOM.
+     */
     function build_html_map(entity_map, do_toggle, tracked_idx=undefined) {
         if(do_toggle)
             animation_toggle = animation_toggle === 0 ? 1 : 0;
