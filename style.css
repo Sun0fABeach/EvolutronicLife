@@ -67,8 +67,10 @@ button {
 }
 #control_panel {
   color: #b0acac;
-  margin-bottom: 10px;
-  display: none;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: height 0.3s, opacity 0.3s;
 }
 #control_panel > * {
   vertical-align: middle;
