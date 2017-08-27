@@ -41,6 +41,28 @@ module.exports = function(grunt) {
                     keepalive: true
                 }
             }
+        },
+        concat: {
+            options: {
+                stripBanners: {
+                    block: true,
+                    line: true
+                }
+            },
+            build: {
+                src: [
+                    'scripts/map.js',
+                    'scripts/helpers.js',
+                    'scripts/tile.js',
+                    'scripts/entities.js',
+                    'scripts/translator.js',
+                    'scripts/simulation.js',
+                    'scripts/display.js',
+                    'scripts/main.js',
+                    'scripts/user_ctrl.js'
+                ],
+                dest: 'scripts/evolife.js'
+            }
         }
     });
 
@@ -48,6 +70,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-concat');
 
-    grunt.registerTask('default', ['watch']);
+    grunt.registerTask('default', ['concat']);
 };
