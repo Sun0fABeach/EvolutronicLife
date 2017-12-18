@@ -29,7 +29,8 @@ pre {
 pre > span {
   display: inline-block;
   width: 8.65px; /* prevents certain chars from breaking monospace */
-  /*overflow-x: hidden;*/
+  font-size: 13px;
+  line-height: 15px;
 }
 pre > span:hover {
   outline: 1px solid white;
