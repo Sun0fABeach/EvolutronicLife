@@ -75,7 +75,7 @@ const translator = function() {
                 if(entity instanceof klass)
                     return {
                         token: display.get_token(entity, display.tokens),
-                        css_class: klass.name.toLowerCase()
+                        css_class: klass.displayName.toLowerCase()
                     };
         return {token: ' ', css_class: ''};
     }

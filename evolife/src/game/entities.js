@@ -602,6 +602,16 @@ const entities = function() {
         min_energy_replenish: 10
     };
 
+    // defined for css class associations
+    Border.displayName = 'Border'
+    Water.displayName = 'Water'
+    Beach.displayName = 'Beach'
+    RainForest.displayName = 'RainForest'
+    Plant.displayName = 'Plant'
+    Protozoan.displayName = 'Protozoan'
+    Herbivore.displayName = 'Herbivore'
+    Carnivore.displayName = 'Carnivore'
+
     return {
         Border, Water, Beach, RainForest, Plant, Protozoan, Herbivore, Carnivore
     };

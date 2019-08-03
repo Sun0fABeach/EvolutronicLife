@@ -55,7 +55,6 @@
 import Vue from 'vue';
 import game from '@/game/main';
 import userCtrl from '@/game/user_ctrl';
-import '@/style.css';
 
 export default Vue.extend({
   name: 'Game',
@@ -65,3 +64,7 @@ export default Vue.extend({
   }
 });
 </script>
+
+<style lang="scss">
+@import '~@/style.css';
+</style>

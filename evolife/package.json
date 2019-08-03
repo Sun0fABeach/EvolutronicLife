@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "dev": "vue-cli-service serve",
+    "build": "vue-cli-service build --modern",
+    "serve": "serve dist"
   },
   "dependencies": {
     "core-js": "^2.6.5",
@@ -16,6 +17,7 @@
     "@vue/cli-service": "^3.9.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
+    "serve": "^11.1.0",
     "typescript": "^3.4.3",
     "vue-template-compiler": "^2.6.10"
   }
