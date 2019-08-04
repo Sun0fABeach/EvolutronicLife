@@ -1,4 +1,7 @@
-# evolife
+# Evolutronic Life
+
+www.higgsino.de/evolife
+=======================
 
 ## Project setup
 ```
@@ -7,7 +10,7 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npm run dev
 ```
 
 ### Compiles and minifies for production
@@ -15,15 +18,7 @@ npm run serve
 npm run build
 ```
 
-### Run your tests
+### Serves production build
 ```
-npm run test
+npm run serve
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
