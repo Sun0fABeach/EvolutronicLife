@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build --modern",
-    "serve": "serve dist"
+    "serve": "serve dist",
+    "doc": "yuidoc src"
   },
   "dependencies": {
     "core-js": "^2.6.5",
