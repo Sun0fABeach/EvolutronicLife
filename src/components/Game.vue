@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <div id="evolife">
     <div id="world"></div>
     <div id="control_panel">
       <label>Steps per second: </label><span id="steps_per_sec"></span>
@@ -48,7 +48,7 @@
       </table>
     </div>
     <button type="button" id="toggle_ctrls">Show Control Panel</button>
-  </main>
+  </div>
 </template>
 
 <script lang="ts">
@@ -66,5 +66,5 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-@import '~@/style.css';
+@import '~@/style';
 </style>

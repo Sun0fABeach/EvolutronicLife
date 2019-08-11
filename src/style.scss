@@ -1,19 +1,5 @@
-html, body {
-  height: 100%;
-}
-html {
-  width: 100%;
-}
-body {
-  background-color: #151010;
-  margin: 0;  /* remove browser auto-margin */
-  font-family: sans-serif;
-}
-main {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+#evolife {
+  display: inline-block;
   text-align: center;
   height: 660px;
 }
