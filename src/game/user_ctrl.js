@@ -126,16 +126,16 @@ const user_ctrl = function() {
      * @private
      */
     function toggle_ctrl_panel(event) {
-        let ctrl_panel = document.getElementById("control_panel");
+        let ctrl_panel = document.getElementById("controls_wrapper");
         if(toggle_ctrls.innerHTML === "Show Control Panel") {
             ctrl_panel.style.height = ctrl_panel.scrollHeight + "px";
             ctrl_panel.style.opacity = 1;
-            ctrl_panel.style.marginTop = "10px";
+            ctrl_panel.style.marginBottom = "12px";
             toggle_ctrls.innerHTML = "Hide Control Panel";
         } else {
             ctrl_panel.style.height = 0;
             ctrl_panel.style.opacity = 0;
-            ctrl_panel.style.marginTop = 0;
+            ctrl_panel.style.marginBottom = 0;
             toggle_ctrls.innerHTML = "Show Control Panel";
         }
     }

@@ -97,7 +97,7 @@ import entities from './entities';
       *                                the stats table will be cleared.
       */
      function _update_watched_table(watched_entity) {
-         const stats_table = document.querySelector("#control_panel > table");
+         const stats_table = document.querySelector("#control_panel table");
          const fields = Array.from(stats_table.getElementsByTagName("td"));
          const name_field = helpers.remove_from_array(
              fields, stats_table.querySelector("#type")
