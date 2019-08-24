@@ -3,26 +3,31 @@
   text-align: center;
   height: 660px;
 }
-pre {
-  background-color: #999966;
-  border: groove 5px #904723;
-  border-radius: 12px;
-  padding: 5px;
-  letter-spacing: 1px;
-  font-family: monospace;
-  cursor: pointer;
-}
-pre > span {
-  display: inline-block;
-  width: 8.65px; /* prevents certain chars from breaking monospace */
-  font-size: 13px;
-  line-height: 15px;
-}
-pre > span:hover {
-  outline: 1px solid white;
-}
-pre > #tracked {
-  outline: 1px solid red;
+
+#world {
+  pre {
+    background-color: #999966;
+    border: groove 5px #904723;
+    border-radius: 12px;
+    padding: 5px;
+    letter-spacing: 1px;
+    font-family: monospace;
+    cursor: pointer;
+
+    > span {
+      display: inline-block;
+      width: 8.65px; /* prevents certain chars from breaking monospace */
+      font-size: 13px;
+      line-height: 15px;
+
+      &:hover {
+        outline: 1px solid white;
+      }
+      &#tracked {
+        outline: 1px solid red;
+      }
+    }
+  }
 }
 
 .water {
@@ -47,111 +52,115 @@ pre > #tracked {
   color: red;
 }
 
-button {
-  cursor: pointer;
-  border: none;
-  -moz-outline-radius: 6px;
-}
 #control_panel {
   color: #b0acac;
   height: 0;
   opacity: 0;
   overflow: hidden;
   transition: height 0.3s, opacity 0.3s;
-}
-#control_panel > * {
-  vertical-align: middle;
-}
-#control_panel > label {
-  font-size: 0.9em;
-}
-#steps_per_sec {
-  margin-right: 20px;
-  font-family: monospace;
-  font-size: 1.1em;
-}
-#speed_ctrl_container {
-  display: inline-block;
-  width: 215px;
-}
-#speed_ctrl_container > .ctrl_button {
-  margin: 5px 20px 5px 0;
-}
-.ctrl_button {
-  background-color: black;
-  outline: 1px solid #904723;
-  color: inherit;
-  padding: 8px 16px;
-  width: 82px;
-}
-.ctrl_button:hover {
-  outline-width: 2px;
-}
-.ctrl_button:active {
-  color: white;
-}
-.ctrl_button[disabled] {
-  background-color: #151010;
-  color: #868181;
-  cursor: default;
-}
-.ctrl_button[disabled]:hover {
-  outline-width: 1px;
+
+  > * {
+    vertical-align: middle;
+  }
+  > label {
+    font-size: 0.9em;
+  }
+  #steps_per_sec {
+    margin-right: 20px;
+    font-family: monospace;
+    font-size: 1.1em;
+  }
+  #speed_ctrl_container {
+    display: inline-block;
+    width: 215px;
+    > .ctrl_button {
+      margin: 5px 20px 5px 0;
+    }
+  }
+  .ctrl_button {
+    background-color: black;
+    outline: 1px solid #904723;
+    color: inherit;
+    padding: 8px 16px;
+    width: 82px;
+
+    &:hover {
+      outline-width: 2px;
+    }
+    &:active {
+      color: white;
+    }
+    &[disabled] {
+      background-color: #151010;
+      color: #868181;
+      cursor: default;
+    }
+    &[disabled]:hover {
+      outline-width: 1px;
+    }
+  }
+
+  #kill_switch_container {
+    display: inline-block;
+    width: 120px;
+    margin-right: 40px;
+    padding: 5px;
+  }
+  #kill_switch_container > select {
+    padding: 5px;
+    margin-bottom: 12px;
+    background-color: inherit;
+    color: inherit;
+    border: solid 1px #b0acac;
+  }
+  #kill_switch_container option {
+    background-color: #151010;
+  }
+
+  #tracker_display {
+    display: inline-block;
+    width: 40px;
+    height: 45px;
+    margin-left: 10px;
+    margin-right: 30px;
+    background-color: #999966;
+    border: solid 2px #904723;
+    padding-top: 4px;
+    font-family: monospace;
+    font-size: 35px;
+    cursor: default;
+  }
+  > table {
+    display: inline-block;
+    font-size: 0.8em;
+    text-align: left;
+
+    th {
+      padding-right: 10px;
+    }
+    td {
+      width: 80px;
+    }
+    td.last_col {
+      width: 40px;
+    }
+  }
 }
 
-#kill_switch_container {
-  display: inline-block;
-  width: 120px;
-  margin-right: 40px;
-  padding: 5px;
+button {
+  cursor: pointer;
+  border: none;
+  -moz-outline-radius: 6px;
 }
-#kill_switch_container > select {
-  padding: 5px;
-  margin-bottom: 12px;
-  background-color: inherit;
-  color: inherit;
-  border: solid 1px #b0acac;
-}
-#kill_switch_container option {
-  background-color: #151010;
-}
-
-#tracker_display {
-  display: inline-block;
-  width: 40px;
-  height: 45px;
-  margin-left: 10px;
-  margin-right: 30px;
-  background-color: #999966;
-  border: solid 2px #904723;
-  padding-top: 4px;
-  font-family: monospace;
-  font-size: 35px;
-  cursor: default;
-}
-#control_panel > table {
-  display: inline-block;
-  font-size: 0.8em;
-  text-align: left;
-}
-#control_panel > table th {
-  padding-right: 10px;
-}
-#control_panel > table td {
-  width: 80px;
-}
-#control_panel > table td.last_col {
-  width: 40px;
-}
-
 #toggle_ctrls {
   margin-top: 10px;
   background-color: inherit;
   outline: none;
   padding: 8px 10px;
   color: #904723;
-}
-#toggle_ctrls:hover {
-  outline: 1px solid #904723;
-  background-color: black;
+
+  &:hover {
+    outline: 1px solid #904723;
+    background-color: black;
+  }
 }
