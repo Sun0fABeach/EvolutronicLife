@@ -4,11 +4,14 @@
  * @requires helpers
  * @requires translator
  * @requires entities
+ * @requires globals
  */
 
 import helpers from './helpers';
 import translator from './translator';
 import entities from './entities';
+import { markupPrefix } from './globals';
+
 
 /**
  * Top level display singleton object.
@@ -29,7 +32,9 @@ import entities from './entities';
          const new_map = translator.build_html_map(
              entity_map, do_toggle, watched_idx
          );
-         const world_container = document.getElementById("world");
+         const world_container = document.getElementById(
+             `${markupPrefix}world`
+         );
          const old_map = world_container.firstElementChild;
          if(old_map)
              world_container.removeChild(old_map);
@@ -46,12 +51,13 @@ import entities from './entities';
       *                             current highlighting.
       */
      function highlight_watched_on_map(watched_idx) {
-         const currently_highlighted = document.getElementById("tracked");
+         const trackedId = `${markupPrefix}tracked`
+         const currently_highlighted = document.getElementById(trackedId);
          if(currently_highlighted)
             currently_highlighted.id = "";
          if(watched_idx !== undefined) {
-             const map = document.querySelector("pre");
-             map.children[watched_idx].id = "tracked";
+             const map = document.querySelector(`#${markupPrefix}world pre`);
+             map.children[watched_idx].id = trackedId;
          }
      }
 
@@ -75,7 +81,9 @@ import entities from './entities';
       *                                the token display will be cleared.
       */
      function _update_token_display(watched_entity) {
-         const tracker_display = document.getElementById("tracker_display");
+         const tracker_display = document.getElementById(
+             `${markupPrefix}tracker-display`
+         );
 
          if(!watched_entity) {
              tracker_display.className = "";
@@ -97,10 +105,14 @@ import entities from './entities';
       *                                the stats table will be cleared.
       */
      function _update_watched_table(watched_entity) {
-         const stats_table = document.querySelector("#control_panel table");
+         const stats_table = document.getElementById(
+             `${markupPrefix}entity-stats`
+         );
+
+         const statsPrefix = `${markupPrefix}entity-stats__`
          const fields = Array.from(stats_table.getElementsByTagName("td"));
          const name_field = helpers.remove_from_array(
-             fields, stats_table.querySelector("#type")
+             fields, stats_table.querySelector(`#${statsPrefix}type`)
          );
 
          if(watched_entity) {
@@ -113,15 +125,17 @@ import entities from './entities';
          }
 
          for(const field of fields) {
-             if(!watched_entity || watched_entity[field.id] === undefined ||
-                                   watched_entity[field.id] === Infinity) {
+             const stat = field.dataset.stat
+
+             if(!watched_entity || watched_entity[stat] === undefined ||
+                                   watched_entity[stat] === Infinity) {
                 field.innerHTML = "-";
              } else {
-                // field html ids match the entity property names
-                let value = watched_entity[field.id];
-                if(field.id === "level") // level starts at 0 internally
-                    ++value;
-                else if(field.id === "is_horny") // if true, value is a boolean
+                // field dataset values match the entity property names
+                let value = watched_entity[stat];
+                if(stat === "level")
+                    ++value; // level starts at 0 internally
+                else if(stat === "is_horny") // value is bool
                     value = ["No", "Yes"][0+value]; // cast to int for indexing
                 field.innerHTML = value;
              }
@@ -135,7 +149,7 @@ import entities from './entities';
       */
      function update_speed(step_duration) {
          const steps_per_sec = (1000 / step_duration).toFixed(2);
-         document.querySelector("#steps_per_sec").innerHTML =
+         document.querySelector(`#${markupPrefix}steps-per-sec`).innerHTML =
              helpers.pad_left(steps_per_sec, 5);
      }
 

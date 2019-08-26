@@ -4,9 +4,12 @@
  * Event listeners for user input.
  * @module user_ctrl
  * @requires main
+ * @requires globals
  */
 
 import main from './main';
+import { markupPrefix } from './globals';
+
 
 const user_ctrl = function() {
 
@@ -19,13 +22,13 @@ const user_ctrl = function() {
      * @private
      */
     function setup_event_listeners() {
-        faster_button = document.getElementById("faster");
-        slower_button = document.getElementById("slower");
-        pause_button = document.getElementById("pause");
-        step_button = document.getElementById("step");
-        kill_button = document.getElementById("kill");
-        kill_select = document.getElementById("kill_options");
-        toggle_ctrls = document.getElementById("toggle_ctrls");
+        faster_button = document.getElementById(`${markupPrefix}faster`);
+        slower_button = document.getElementById(`${markupPrefix}slower`);
+        pause_button = document.getElementById(`${markupPrefix}pause`);
+        step_button = document.getElementById(`${markupPrefix}step`);
+        kill_button = document.getElementById(`${markupPrefix}kill`);
+        kill_select = document.getElementById(`${markupPrefix}kill-options`);
+        toggle_ctrls = document.getElementById(`${markupPrefix}toggle-ctrls`);
         faster_button.addEventListener("click", increase_speed);
         slower_button.addEventListener("click", decrease_speed);
         pause_button.addEventListener("click", stop_resume);
@@ -36,7 +39,7 @@ const user_ctrl = function() {
         step_button.setAttribute("disabled", "");
 
         toggle_ctrls.addEventListener("click", toggle_ctrl_panel);
-        document.getElementById("world").addEventListener(
+        document.getElementById("evolife--world").addEventListener(
             "mouseup", track_entity
         );
     }
@@ -116,7 +119,7 @@ const user_ctrl = function() {
      * @private
      */
     function kill_entities(event) {
-        main.kill_all_of(kill_options.value);
+        main.kill_all_of(kill_select.value);
     }
 
     /**
@@ -126,8 +129,10 @@ const user_ctrl = function() {
      * @private
      */
     function toggle_ctrl_panel(event) {
-        let ctrl_panel = document.getElementById("controls_wrapper");
-        if(toggle_ctrls.innerHTML === "Show Control Panel") {
+        let ctrl_panel = document.getElementById(
+            `${markupPrefix}controls-wrapper`
+        );
+        if(toggle_ctrls.innerHTML.trim() === "Show Control Panel") {
             ctrl_panel.style.height = ctrl_panel.scrollHeight + "px";
             ctrl_panel.style.opacity = 1;
             ctrl_panel.style.marginBottom = "12px";

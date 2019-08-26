@@ -75,7 +75,7 @@ const translator = function() {
                 if(entity instanceof klass)
                     return {
                         token: display.get_token(entity, display.tokens),
-                        css_class: klass.displayName.toLowerCase()
+                        css_class: `evolife--${klass.displayName.toLowerCase()}`
                     };
         return {token: ' ', css_class: ''};
     }
@@ -118,7 +118,7 @@ const translator = function() {
                 if(css_class)
                     span.className = css_class;
                 if(element_counter++ === tracked_idx)
-                    span.id = "tracked";
+                    span.id = "evolife--tracked";
                 span.appendChild(document.createTextNode(token));
                 html_map.appendChild(span);
             }
