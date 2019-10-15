@@ -9,6 +9,9 @@
 import helpers from './helpers';
 import entities from './entities';
 import Tile from './tile';
+import {
+    each, map, invokeMap, range, concat, difference, transform, chain
+} from 'lodash-es'
 
  /**
   * Singleton object containing simulation functions.
@@ -16,11 +19,7 @@ import Tile from './tile';
   */
 const simulation = function() {
     let tile_map = [];
-
-    const entity_lists = new Map();
-    for(const class_name in entities)
-        if(entities.hasOwnProperty(class_name))
-            entity_lists.set(entities[class_name], []);
+    const entity_lists = new Map(map(entities, klass => [klass, []]));
 
     /**
      * Build up an internal tile map, based on the given entity map.
@@ -28,8 +27,8 @@ const simulation = function() {
      * @param {Array} entity_map 2D array containing rows of entity objects
      */
     function setup_tile_map(entity_map) {
-        tile_map = entity_map.map(function(entity_row, y) {
-            return entity_row.map(function(entity, x) {
+        tile_map = map(entity_map, (entity_row, y) => {
+            return map(entity_row, (entity, x) => {
                 const tile = new Tile(y, x);
                 if(entity) {
                     tile.push_entity(entity);
@@ -56,12 +55,13 @@ const simulation = function() {
      * @param {Number} [num_rings=8] number of environment rings
      */
     function setup_env_rings(tile_map, num_rings = 8) {
-        tile_map.forEach(function(tile_row, y) {
-            tile_row.forEach(function(tile, x) {
-                for(let scope = 1; scope <= num_rings; ++scope)
-                    tile.env_rings.push(calc_env_ring(tile_map, y, x, scope));
-            });
-        });
+        each(tile_map, (tile_row, y) =>
+            each(tile_row, (tile, x) =>
+                each(range(1, num_rings + 1), scope =>
+                    tile.env_rings.push(calc_env_ring(tile_map, y, x, scope))
+                )
+            )
+        );
     }
 
     /**
@@ -86,28 +86,28 @@ const simulation = function() {
         const env_ring = [];
 
         let x_on_map, y_on_map = center_y - scope;     //top ring row
-        for(let relative_x = -scope; relative_x <= scope; ++relative_x) {
+        each(range(-scope, scope + 1), relative_x => {
             x_on_map = center_x + relative_x;
             add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope);
-        }
+        });
 
         x_on_map = center_x - scope;     //left ring column
-        for(let relative_y = -scope+1; relative_y < scope; ++relative_y) {
+        each(range(-scope + 1, scope), relative_y => {
             y_on_map = center_y + relative_y;
             add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope);
-        }
+        });
 
         x_on_map = center_x + scope;     //right ring column
-        for(let relative_y = -scope+1; relative_y < scope; ++relative_y) {
+        each(range(-scope + 1, scope), relative_y => {
             y_on_map = center_y + relative_y;
             add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope);
-        }
+        });
 
         y_on_map = center_y + scope;     //bottom ring row
-        for(let relative_x = -scope; relative_x <= scope; ++relative_x) {
+        each(range(-scope, scope + 1), relative_x => {
             x_on_map = center_x + relative_x;
             add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope);
-        }
+        });
 
         return env_ring;
     }
@@ -153,76 +153,81 @@ const simulation = function() {
 
     function vegetation_action() {
         const plant_list = entity_lists.get(entities.Plant);
-        const veggy_list = entity_lists.get(entities.RainForest)
-                                       .concat(plant_list);
+        const veggy_list = concat(
+            plant_list, entity_lists.get(entities.RainForest)
+        );
 
-        const new_plants = veggy_list.reduce((offspring_list, veggy) => {
+        const new_plants = transform(veggy_list, (offspring_list, veggy) => {
             const {offspring} = veggy.act();
             if(offspring)
                 offspring_list.push(offspring);
-            return offspring_list;
-        }, []);
+        });
 
-        entity_lists.set(entities.Plant, plant_list.concat(new_plants));
+        entity_lists.set(entities.Plant, concat(plant_list, new_plants));
     }
 
     function protozoan_action() {
         const protozoan_list = entity_lists.get(entities.Protozoan);
 
-        const dead_protos = protozoan_list.reduce((dead_list, proto) => {
+        const dead_protos = transform(protozoan_list, (dead_list, proto) => {
             const {offspring: new_animal, death} = proto.act();
             if(new_animal) {
-                [entities.Herbivore, entities.Carnivore].forEach((klass) => {
-                    if(new_animal instanceof klass)
-                        entity_lists.get(klass).push(new_animal);
+                each([entities.Herbivore, entities.Carnivore], entity_class => {
+                    if(new_animal instanceof entity_class)
+                        entity_lists.get(entity_class).push(new_animal);
                 });
                 dead_list.push(proto);
             } else if(death) {
                 dead_list.push(proto);
             }
-            return dead_list;
-        }, []);
+        });
 
-        for(const corpse of dead_protos)
-            helpers.remove_from_array(protozoan_list, corpse);
+        each(dead_protos, corpse =>
+            helpers.remove_from_array(protozoan_list, corpse)
+        );
     }
 
     function water_action() {
         const water_list = entity_lists.get(entities.Water);
 
-        const new_protozoans = water_list.reduce((offspring_list, water) => {
+        const new_protos = transform(water_list, (offspring_list, water) => {
             const {offspring} = water.act();
             if(offspring)
                 offspring_list.push(offspring);
-            return offspring_list;
-        }, []);
+        });
 
         const protozoan_list = entity_lists.get(entities.Protozoan);
         entity_lists.set(
-            entities.Protozoan, protozoan_list.concat(new_protozoans)
+            entities.Protozoan, protozoan_list.concat(new_protos)
         );
     }
 
     function landanimal_action(hunter_class, prey_class) {
-        const offspring_list = [];
+        const action_data = map(entity_lists.get(hunter_class), hunter =>
+            ({hunter, ...hunter.act()})
+        );
 
-        let survivors = entity_lists.get(hunter_class).filter(animal => {
-            const {killed_prey, offspring, death} = animal.act();
+        const surviving_hunters = chain(action_data)
+            .reject('death')
+            .map('hunter')
+            .value();
 
-            if(death)
-                return false;
+        const offspring = chain(action_data)
+            .filter('offspring')
+            .map('offspring')
+            .value();
 
-            if(killed_prey)
-                helpers.remove_from_array(
-                    entity_lists.get(prey_class), killed_prey
-                );
-            else if(offspring)
-                offspring_list.push(offspring);
+        const killed_prey = chain(action_data)
+            .filter('killed_prey')
+            .map('killed_prey')
+            .value();
 
-            return true;
-        });
-
-        entity_lists.set(hunter_class, survivors.concat(offspring_list));
+        entity_lists.set(
+            prey_class, difference(entity_lists.get(prey_class), killed_prey)
+        );
+        entity_lists.set(
+            hunter_class, concat(surviving_hunters, offspring)
+        );
     }
 
     /**
@@ -232,7 +237,7 @@ const simulation = function() {
      * @return {Array} 2D array containing rows of entity objects.
      */
     function entity_map() {
-        return tile_map.map(row => row.map(tile => tile.entity()));
+        return map(tile_map, row => invokeMap(row, 'entity'));
     }
 
     /**
@@ -254,8 +259,7 @@ const simulation = function() {
      */
     function kill_entity_type(type_name) {
         const entity_class = entities[type_name];
-        for(const entity of entity_lists.get(entity_class))
-            entity.die();
+        invokeMap(entity_lists.get(entity_class), 'die');
         entity_lists.set(entity_class, []);
     }
 
