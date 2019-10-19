@@ -1,13 +1,12 @@
 /**
  * HTML modification routines.
  * @module display
- * @requires helpers
  * @requires translator
  * @requires entities
  * @requires globals
  */
 
-import helpers from './helpers';
+import { pull, padStart } from 'lodash-es'
 import translator from './translator';
 import entities from './entities';
 import { markupPrefix } from './globals';
@@ -111,9 +110,8 @@ import { markupPrefix } from './globals';
 
          const statsPrefix = `${markupPrefix}entity-stats__`
          const fields = Array.from(stats_table.getElementsByTagName("td"));
-         const name_field = helpers.remove_from_array(
-             fields, stats_table.querySelector(`#${statsPrefix}type`)
-         );
+         const name_field = stats_table.querySelector(`#${statsPrefix}type`);
+         pull(fields, name_field);
 
          if(watched_entity) {
              for(const class_name in entities)
@@ -150,7 +148,7 @@ import { markupPrefix } from './globals';
      function update_speed(step_duration) {
          const steps_per_sec = (1000 / step_duration).toFixed(2);
          document.querySelector(`#${markupPrefix}steps-per-sec`).innerHTML =
-             helpers.pad_left(steps_per_sec, 5);
+             padStart(steps_per_sec, "&nbsp;", 5);
      }
 
      return {

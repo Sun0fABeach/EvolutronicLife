@@ -1,16 +1,14 @@
 /**
  * Simulation logic.
  * @module simulation
- * @requires helpers
  * @requires entities
  * @requires tile
  */
 
-import helpers from './helpers';
 import entities from './entities';
 import Tile from './tile';
 import {
-    each, map, invokeMap, range, concat, difference, transform, chain
+    each, map, invokeMap, range, concat, difference, pullAll, transform, chain
 } from 'lodash-es'
 
  /**
@@ -182,9 +180,7 @@ const simulation = function() {
             }
         });
 
-        each(dead_protos, corpse =>
-            helpers.remove_from_array(protozoan_list, corpse)
-        );
+        pullAll(protozoan_list, dead_protos);
     }
 
     function water_action() {

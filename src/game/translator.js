@@ -87,8 +87,8 @@ const translator = function() {
      * @return {Array} 2D array containing entity instances.
      */
     function parse_initial_map(map) {
-        return map.map(
-            line => line.split('').map(token => token_to_entity(token))
+        return map.map(line =>
+            line.split('').map(token => token_to_entity(token))
         );
     }
 

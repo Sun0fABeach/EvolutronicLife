@@ -2,10 +2,9 @@
  * The simulated map consists of a grid of tiles that all the entities can
  * move onto or out of.
  * @module tile
- * @requires helpers
  */
 
-import helpers from './helpers';
+import { pull } from 'lodash-es';
 
 class Tile {
     /**
@@ -47,10 +46,9 @@ class Tile {
      * Remove given entity from entity stack.
      * @method remove_entity
      * @param {Entity} entity Entity to remove from stack
-     * @return {Entity} Removed entity, or *null* if not found in stack.
      */
     remove_entity(entity) {
-        return helpers.remove_from_array(this._entity_stack, entity);
+        pull(this._entity_stack, entity);
     }
 
     /**

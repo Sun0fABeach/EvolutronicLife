@@ -1,10 +1,9 @@
 /**
  * Game entity class hierarchy.
  * @module entities
- * @requires helpers
  */
 
-import helpers from './helpers';
+import { random, sample } from 'lodash-es'
 
 const entities = function() {
     function Mortal(Base = class {}) {
@@ -78,7 +77,7 @@ const entities = function() {
         }
 
         _try_spawning() {
-            if(helpers.chance_in_percent(1) && !this._tile.entity(Protozoan))
+            if(random(100) < 1 && !this._tile.entity(Protozoan))
                 return new Protozoan(this._tile);
             return null;
         }
@@ -133,7 +132,7 @@ const entities = function() {
             if(prey_list.length === 0)
                 return {ate: false};
 
-            const prey = helpers.array_choice(prey_list);
+            const prey = sample(prey_list);
             this._food += prey.health;
             const min_energy = this._cfg.min_energy_replenish;
             this._energy = Math.min(min_energy, this._energy + 1);
@@ -175,11 +174,11 @@ const entities = function() {
             const birthplace_list = env.filter(tile => tile.walkable());
             if(birthplace_list.length === 0)
                 return null;
-            const birthplace = helpers.array_choice(birthplace_list);
+            const birthplace = sample(birthplace_list);
 
-            this._have_sex(helpers.array_choice(mating_partners));
+            this._have_sex(sample(mating_partners));
 
-            if(helpers.chance_in_percent(this._cfg.lvlup_chance) &&
+            if(random(100) < this._cfg.lvlup_chance &&
                 this._lvl != this._cfg.max_level &&
                 birthplace.walkable(this._lvl + 1)
             ){
@@ -265,7 +264,7 @@ const entities = function() {
         }
 
         _make_step_choice(target_candidates) {
-            const wanted_target = helpers.array_choice(target_candidates);
+            const wanted_target = sample(target_candidates);
             const immediate_env = this._tile.env_rings[0];
             const step_position = this._calculate_step(wanted_target);
             const target_tile = immediate_env[step_position];
@@ -321,7 +320,7 @@ const entities = function() {
                 tile => tile.walkable(this._lvl)
             );
             if(walkable_tiles.length > 0)
-                return helpers.array_choice(walkable_tiles);
+                return sample(walkable_tiles);
             else
                 return null;
         }
@@ -431,9 +430,9 @@ const entities = function() {
 
         _jump_on_beach() {
             this.die();
-            const constr = helpers.chance_in_percent(
-                Protozoan.config.herby_evo_chance) ? Herbivore : Carnivore;
-            return new constr(helpers.array_choice(this._adjacent_beaches), 0);
+            const constr = random(100) < Protozoan.config.herby_evo_chance ?
+                Herbivore : Carnivore;
+            return new constr(sample(this._adjacent_beaches), 0);
         }
 
         _move() {
@@ -448,7 +447,7 @@ const entities = function() {
                 this.die();
                 return false; // dies when it has nowhere to move
             }
-            this.go_to_tile(helpers.array_choice(swimmable_tiles));
+            this.go_to_tile(sample(swimmable_tiles));
             return true;
         }
 
@@ -470,12 +469,12 @@ const entities = function() {
             const free_tiles = env.filter(tile => tile.empty());
             if(free_tiles.length > 0) {
                 if(this._ticks_to_reproduce === undefined) {
-                    this._ticks_to_reproduce = helpers.random_in_range(
+                    this._ticks_to_reproduce = random(
                         ...Vegetation.config.ticks_repro_range
-                    );
+                    )
                 } else if(--this._ticks_to_reproduce <= 0) {
                     this._ticks_to_reproduce = undefined;
-                    return new Plant(helpers.array_choice(free_tiles), 0);
+                    return new Plant(sample(free_tiles), 0);
                 }
             } else {
                 this._ticks_to_reproduce = undefined;
@@ -526,7 +525,7 @@ const entities = function() {
             })) {
                 if(this._ticks_to_evolve === undefined) {
                     const tick_range = Plant.config.ticks_evo_range;
-                    this._ticks_to_evolve = helpers.random_in_range(...tick_range);
+                    this._ticks_to_evolve = random(...tick_range);
                     return false;
                 } else {
                     return --this._ticks_to_evolve <= 0 ? true : false;
