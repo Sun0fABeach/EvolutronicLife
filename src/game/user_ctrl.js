@@ -7,6 +7,7 @@
  * @requires globals
  */
 
+import { indexOf } from 'lodash-es'
 import main from './main';
 import { markupPrefix } from './globals';
 
@@ -153,9 +154,7 @@ const user_ctrl = function() {
      */
     function track_entity(event) {
         const clicked = event.target;
-        main.set_watched_entity(
-            Array.from(clicked.parentNode.children).indexOf(clicked)
-        );
+        main.set_watched_entity(indexOf(clicked.parentNode.children, clicked));
     }
 
     return { setup_event_listeners }

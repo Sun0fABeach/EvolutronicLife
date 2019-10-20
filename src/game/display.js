@@ -6,7 +6,7 @@
  * @requires globals
  */
 
-import { pull, padStart } from 'lodash-es'
+import { pull, padStart, findKey } from 'lodash-es'
 import translator from './translator';
 import entities from './entities';
 import { markupPrefix } from './globals';
@@ -114,10 +114,9 @@ import { markupPrefix } from './globals';
          pull(fields, name_field);
 
          if(watched_entity) {
-             for(const class_name in entities)
-                 if(entities.hasOwnProperty(class_name))
-                     if(watched_entity instanceof entities[class_name])
-                        { name_field.innerHTML = class_name; break; }
+            name_field.innerHTML = findKey(entities, klass =>
+                watched_entity instanceof klass
+            );
          } else {
              name_field.innerHTML = "-";
          }

@@ -7,6 +7,7 @@
  * @requires entities
  */
 
+import { each, map, transform, indexOf } from 'lodash-es'
 import entities from './entities';
 
  /**
@@ -54,7 +55,7 @@ const translator = function() {
      */
     function token_to_entity(symbol) {
         for(const [klass, display] of mapping.entries()) {
-            const found_idx = display.tokens.indexOf(symbol);
+            const found_idx = indexOf(display.tokens, symbol);
             if(found_idx >= 0)
                 return klass.instance || new klass(null, found_idx);
                 /* some entities can be handled as one shared instance as a
@@ -83,12 +84,12 @@ const translator = function() {
     /**
      * Build an entity map out of a token map.
      * @method parse_initial_map
-     * @param {Array} map 2D array representing a token map
+     * @param {Array} token_map 2D array representing a token map
      * @return {Array} 2D array containing entity instances.
      */
-    function parse_initial_map(map) {
-        return map.map(line =>
-            line.split('').map(token => token_to_entity(token))
+    function parse_initial_map(token_map) {
+        return map(token_map, line =>
+            map(line.split(''), token => token_to_entity(token))
         );
     }
 
@@ -108,23 +109,21 @@ const translator = function() {
         if(do_toggle)
             animation_toggle = animation_toggle === 0 ? 1 : 0;
 
-        let element_counter = 0;
-
-        const html_map = document.createElement("pre");
-        for(const ent_row of entity_map) {
-            for(const ent of ent_row) {
-                const span = document.createElement("span");
+        return transform(entity_map, (html_map, ent_row, row_idx) => {
+            each(ent_row, (ent, col_idx) => {
                 const {token, css_class} = entity_to_token(ent);
+                const span = document.createElement("span");
+
                 if(css_class)
                     span.className = css_class;
-                if(element_counter++ === tracked_idx)
+                if(row_idx * ent_row.length + col_idx === tracked_idx)
                     span.id = "evolife--tracked";
+
                 span.appendChild(document.createTextNode(token));
                 html_map.appendChild(span);
-            }
+            });
             html_map.appendChild(document.createTextNode('\n'));
-        }
-        return html_map;
+        }, document.createElement("pre"));
     }
 
     return { entity_to_token, parse_initial_map, build_html_map };
