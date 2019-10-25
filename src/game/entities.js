@@ -195,8 +195,8 @@ const entities = function() {
         }
 
         _devolve(child_class, birthplace) {
-            // it is assumed that we need to devolve b/c of blocking veggy on tile
-            const veggy_lvl = birthplace.entity().level;
+            // it's assumed we need to devolve b/c of blocking veggy on tile
+            const veggy_lvl = birthplace.top_entity().level;
             return new child_class(birthplace, veggy_lvl - 1);
         }
 
@@ -441,7 +441,7 @@ const entities = function() {
 
             const env = this._tile.env_rings[0];
             const swimmable_tiles = env.filter(
-                (tile) => tile.entity() instanceof Water
+                tile => tile.top_entity() instanceof Water
             );
             if(swimmable_tiles.length === 0) {
                 this.die();

@@ -4,7 +4,7 @@
  * @module tile
  */
 
-import { pull } from 'lodash-es';
+import { pull, last, find, some } from 'lodash-es';
 
 class Tile {
     /**
@@ -38,8 +38,7 @@ class Tile {
      * @return {Entity} Popped entity, or *null* if stack is empty.
      */
     pop_entity() {
-        const popped = this._entity_stack.pop();
-        return popped ? popped : null;
+        return this._entity_stack.pop() || null;
     }
 
     /**
@@ -52,25 +51,27 @@ class Tile {
     }
 
     /**
-     * Get reference to entity of the entity stack.
+     * Return top of the entity stack.
+     * @method top_entity
+     * @return {Entity} Entity at the top, or *null* if stack is empty.
+     */
+    top_entity() {
+        return last(this._entity_stack) || null;
+    }
+
+    /**
+     * Search for entity on the stack.
      * @method entity
-     * @param {Class} [entity_class=undefined] Class of the searched entity.
-     *  If not defined, the top entity of the stack (or *null* if empty)
-     *  will be returned.
+     * @param {Class} [entity_class] Class of the searched entity.
      * @param {Number} [lvl=undefined] Level of the searched entity.
-     *  Only has effect when *entity_class* is defined.
+     *  Searches for entity of given class with any level if not provided.
      * @return {Entity} Found Entity or *undefined*.
      */
-    entity(entity_class = undefined, lvl = undefined) {
-        if(entity_class) {
-            return this._entity_stack.find(entity => {
-                if(entity instanceof entity_class)
-                    return lvl === undefined || entity.level === lvl;
-            });
-        } else {
-            const len = this._entity_stack.length;
-            return len > 0 ? this._entity_stack[len - 1] : undefined;
-        }
+    entity(entity_class, lvl = undefined) {
+        return find(this._entity_stack, entity => {
+            if(entity instanceof entity_class)
+                return lvl === undefined || entity.level === lvl;
+        });
     }
 
     /**
@@ -79,7 +80,7 @@ class Tile {
      * @return {Boolean} True if this tile holds no entity, false otherwise
      */
      empty() {
-        return !this.entity();
+        return !this.top_entity();
      }
 
     /**
@@ -92,7 +93,7 @@ class Tile {
         if(this.empty())
             return true;
 
-        if(this._entity_stack.some(entity => entity.allows_step < lvl))
+        if(some(this._entity_stack, entity => entity.allows_step < lvl))
             return false;
 
         return true;

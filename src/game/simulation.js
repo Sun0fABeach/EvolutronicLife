@@ -233,7 +233,7 @@ const simulation = function() {
      * @return {Array} 2D array containing rows of entity objects.
      */
     function entity_map() {
-        return map(tile_map, row => invokeMap(row, 'entity'));
+        return map(tile_map, row => invokeMap(row, 'top_entity'));
     }
 
     /**
@@ -245,7 +245,7 @@ const simulation = function() {
      *                  if there is none.
      */
     function get_entity(y, x) {
-        return tile_map[y][x].entity();
+        return tile_map[y][x].top_entity();
     }
 
     /**
