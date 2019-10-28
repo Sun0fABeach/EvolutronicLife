@@ -114,17 +114,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import game from '@/game/main';
-import userCtrl from '@/game/user_ctrl';
+import Vue from 'vue'
+import game from '@/game/main'
+import userCtrl from '@/game/user_ctrl'
 
 export default Vue.extend({
   name: 'Game',
   mounted() {
-    userCtrl.setup_event_listeners();
-    game.start_simulation();
+    userCtrl.setup_event_listeners()
+    game.start_simulation()
   }
-});
+})
 </script>
 
 <style lang="scss">

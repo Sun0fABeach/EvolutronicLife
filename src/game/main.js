@@ -7,10 +7,10 @@
  * @requires display
  */
 
-import translator from './translator';
-import simulation from './simulation';
-import display from './display';
-import map from './map';
+import translator from './translator'
+import simulation from './simulation'
+import display from './display'
+import map from './map'
 
 /**
  * Top level simulation control singleton object.
@@ -18,14 +18,14 @@ import map from './map';
  */
 const main = function() {
 
-    let step_duration = 500;
-    const step_change = 100;
-    const max_step_duration = 1000;
-    const min_step_duration = 100;
-    let simulation_stopped = false;
-    let current_timeout;
-    let watched_entity;
-    let num_map_cols;
+    let step_duration = 500
+    const step_change = 100
+    const max_step_duration = 1000
+    const min_step_duration = 100
+    let simulation_stopped = false
+    let current_timeout
+    let watched_entity
+    let num_map_cols
 
     /**
      * Display current simulation state (map and tracking table).
@@ -35,9 +35,9 @@ const main = function() {
      * @method display_simulation_state
      */
     function display_simulation_state(is_new_step=true) {
-        const watched_idx = check_watched_entity();
-        display.update_world(simulation.entity_map, is_new_step, watched_idx);
-        display.update_watched_info(watched_entity);
+        const watched_idx = check_watched_entity()
+        display.update_world(simulation.entity_map, is_new_step, watched_idx)
+        display.update_watched_info(watched_entity)
     }
 
     /**
@@ -45,8 +45,8 @@ const main = function() {
      * @method step
      */
     function step() {
-        simulation.update();
-        display_simulation_state();
+        simulation.update()
+        display_simulation_state()
     }
 
     /**
@@ -55,8 +55,8 @@ const main = function() {
      * @private
      */
     function loop() {
-        current_timeout = setTimeout(loop, step_duration);
-        step();
+        current_timeout = setTimeout(loop, step_duration)
+        step()
     }
 
     /**
@@ -65,12 +65,12 @@ const main = function() {
      * @method start_simulation
      */
     function start_simulation() {
-        const entity_map = translator.parse_initial_map(map);
-        num_map_cols = entity_map[0].length;
-        simulation.setup_tile_map(entity_map);
-        display.update_speed(step_duration);
-        display_simulation_state(false);
-        setTimeout(loop, step_duration);
+        const entity_map = translator.parse_initial_map(map)
+        num_map_cols = entity_map[0].length
+        simulation.setup_tile_map(entity_map)
+        display.update_speed(step_duration)
+        display_simulation_state(false)
+        setTimeout(loop, step_duration)
     }
 
     /**
@@ -81,13 +81,13 @@ const main = function() {
      *                              child number n of its parent node.
      */
     function set_watched_entity(index_on_map) {
-        const y = Math.floor(index_on_map / num_map_cols);
-        const x = index_on_map % num_map_cols;
-        watched_entity = simulation.get_entity(y, x);
+        const y = Math.floor(index_on_map / num_map_cols)
+        const x = index_on_map % num_map_cols
+        watched_entity = simulation.get_entity(y, x)
         if(!watched_entity)
-            index_on_map = undefined;
-        display.highlight_watched_on_map(index_on_map);
-        display.update_watched_info(watched_entity);
+            index_on_map = undefined
+        display.highlight_watched_on_map(index_on_map)
+        display.update_watched_info(watched_entity)
     }
 
     /**
@@ -101,16 +101,16 @@ const main = function() {
      *                  entity.
      */
     function check_watched_entity() {
-        let watched_idx;
+        let watched_idx
         if(watched_entity) {
             if(!watched_entity.in_simulation()) {
-                watched_entity = null;
+                watched_entity = null
             } else {
                 watched_idx = watched_entity.pos_y * num_map_cols +
-                                watched_entity.pos_x;
+                                watched_entity.pos_x
             }
         }
-        return watched_idx;
+        return watched_idx
     }
 
     /**
@@ -122,12 +122,12 @@ const main = function() {
      */
     function slow_down_interval() {
         if(step_duration < max_step_duration) {
-            step_duration += step_change;
-            display.update_speed(step_duration);
+            step_duration += step_change
+            display.update_speed(step_duration)
         }
         return {
             step_duration, limit_reached: step_duration == max_step_duration
-        };
+        }
     }
 
     /**
@@ -139,12 +139,12 @@ const main = function() {
      */
     function speed_up_interval() {
         if(step_duration > min_step_duration) {
-            step_duration -= step_change;
-            display.update_speed(step_duration);
+            step_duration -= step_change
+            display.update_speed(step_duration)
         }
         return {
             step_duration, limit_reached: step_duration == min_step_duration
-        };
+        }
     }
 
     /**
@@ -154,13 +154,13 @@ const main = function() {
      */
     function stop_resume() {
         if(simulation_stopped) {
-            simulation_stopped = false;
-            loop();
-            return true;
+            simulation_stopped = false
+            loop()
+            return true
         } else {
-            simulation_stopped = true;
-            clearTimeout(current_timeout);
-            return false;
+            simulation_stopped = true
+            clearTimeout(current_timeout)
+            return false
         }
     }
 
@@ -170,8 +170,8 @@ const main = function() {
      * @param {String} entity_type Type of entity to kill
      */
     function kill_all_of(entity_type) {
-        simulation.kill_entity_type(entity_type);
-        display_simulation_state(false);
+        simulation.kill_entity_type(entity_type)
+        display_simulation_state(false)
     }
 
     return {
@@ -182,7 +182,7 @@ const main = function() {
         speed_up_interval,
         stop_resume,
         kill_all_of
-    };
-}();
+    }
+}()
 
-export default main;
+export default main

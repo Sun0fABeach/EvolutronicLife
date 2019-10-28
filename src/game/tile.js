@@ -4,7 +4,7 @@
  * @module tile
  */
 
-import { pull, last, find, some } from 'lodash-es';
+import { pull, last, find, some } from 'lodash-es'
 
 class Tile {
     /**
@@ -16,10 +16,10 @@ class Tile {
      * @return {Tile} New tile instance
      */
     constructor(pos_y, pos_x) {
-        this.pos_y = pos_y;
-        this.pos_x = pos_x;
-        this.env_rings = [];
-        this._entity_stack = [];
+        this.pos_y = pos_y
+        this.pos_x = pos_x
+        this.env_rings = []
+        this._entity_stack = []
     }
 
 
@@ -29,7 +29,7 @@ class Tile {
      * @param {Entity} entity Entity to push
      */
     push_entity(entity) {
-        this._entity_stack.push(entity);
+        this._entity_stack.push(entity)
     }
 
     /**
@@ -38,7 +38,7 @@ class Tile {
      * @return {Entity} Popped entity, or *null* if stack is empty.
      */
     pop_entity() {
-        return this._entity_stack.pop() || null;
+        return this._entity_stack.pop() || null
     }
 
     /**
@@ -47,7 +47,7 @@ class Tile {
      * @param {Entity} entity Entity to remove from stack
      */
     remove_entity(entity) {
-        pull(this._entity_stack, entity);
+        pull(this._entity_stack, entity)
     }
 
     /**
@@ -56,7 +56,7 @@ class Tile {
      * @return {Entity} Entity at the top, or *null* if stack is empty.
      */
     top_entity() {
-        return last(this._entity_stack) || null;
+        return last(this._entity_stack) || null
     }
 
     /**
@@ -70,8 +70,8 @@ class Tile {
     entity(entity_class, lvl = undefined) {
         return find(this._entity_stack, entity => {
             if(entity instanceof entity_class)
-                return lvl === undefined || entity.level === lvl;
-        });
+                return lvl === undefined || entity.level === lvl
+        })
     }
 
     /**
@@ -80,7 +80,7 @@ class Tile {
      * @return {Boolean} True if this tile holds no entity, false otherwise
      */
      empty() {
-        return !this.top_entity();
+        return !this.top_entity()
      }
 
     /**
@@ -91,13 +91,13 @@ class Tile {
      */
     walkable(lvl = 0) {
         if(this.empty())
-            return true;
+            return true
 
         if(some(this._entity_stack, entity => entity.allows_step < lvl))
-            return false;
+            return false
 
-        return true;
+        return true
     }
 }
 
-export default Tile;
+export default Tile

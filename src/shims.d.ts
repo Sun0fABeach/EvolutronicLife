@@ -1,2 +1,2 @@
-declare module '@/game/main';
-declare module '@/game/user_ctrl';
+declare module '@/game/main'
+declare module '@/game/user_ctrl'

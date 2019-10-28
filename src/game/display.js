@@ -7,9 +7,9 @@
  */
 
 import { pull, padStart, findKey } from 'lodash-es'
-import translator from './translator';
-import entities from './entities';
-import { markupPrefix } from './globals';
+import translator from './translator'
+import entities from './entities'
+import { markupPrefix } from './globals'
 
 
 /**
@@ -30,14 +30,14 @@ import { markupPrefix } from './globals';
      function update_world(entity_map, do_toggle, watched_idx=undefined) {
          const new_map = translator.build_html_map(
              entity_map, do_toggle, watched_idx
-         );
+         )
          const world_container = document.getElementById(
              `${markupPrefix}world`
-         );
-         const old_map = world_container.firstElementChild;
+         )
+         const old_map = world_container.firstElementChild
          if(old_map)
-             world_container.removeChild(old_map);
-         world_container.appendChild(new_map);
+             world_container.removeChild(old_map)
+         world_container.appendChild(new_map)
      }
 
      /**
@@ -51,12 +51,12 @@ import { markupPrefix } from './globals';
       */
      function highlight_watched_on_map(watched_idx) {
          const trackedId = `${markupPrefix}tracked`
-         const currently_highlighted = document.getElementById(trackedId);
+         const currently_highlighted = document.getElementById(trackedId)
          if(currently_highlighted)
-            currently_highlighted.id = '';
+            currently_highlighted.id = ''
          if(watched_idx !== undefined) {
-             const map = document.querySelector(`#${markupPrefix}world pre`);
-             map.children[watched_idx].id = trackedId;
+             const map = document.querySelector(`#${markupPrefix}world pre`)
+             map.children[watched_idx].id = trackedId
          }
      }
 
@@ -68,8 +68,8 @@ import { markupPrefix } from './globals';
       *                                the tracking info will be cleared.
       */
      function update_watched_info(watched_entity) {
-         _update_token_display(watched_entity);
-         _update_watched_table(watched_entity);
+         _update_token_display(watched_entity)
+         _update_watched_table(watched_entity)
      }
 
      /**
@@ -82,17 +82,17 @@ import { markupPrefix } from './globals';
      function _update_token_display(watched_entity) {
          const tracker_display = document.getElementById(
              `${markupPrefix}tracker-display`
-         );
+         )
 
          if(!watched_entity) {
-             tracker_display.className = '';
-             tracker_display.innerHTML = '';
-             return;
+             tracker_display.className = ''
+             tracker_display.innerHTML = ''
+             return
          }
 
-         const {token, css_class} = translator.entity_to_token(watched_entity);
-         tracker_display.className = css_class;
-         tracker_display.innerHTML = token;
+         const {token, css_class} = translator.entity_to_token(watched_entity)
+         tracker_display.className = css_class
+         tracker_display.innerHTML = token
      }
 
      /**
@@ -106,19 +106,19 @@ import { markupPrefix } from './globals';
      function _update_watched_table(watched_entity) {
          const stats_table = document.getElementById(
              `${markupPrefix}entity-stats`
-         );
+         )
 
          const statsPrefix = `${markupPrefix}entity-stats__`
-         const fields = Array.from(stats_table.getElementsByTagName('td'));
-         const name_field = stats_table.querySelector(`#${statsPrefix}type`);
-         pull(fields, name_field);
+         const fields = Array.from(stats_table.getElementsByTagName('td'))
+         const name_field = stats_table.querySelector(`#${statsPrefix}type`)
+         pull(fields, name_field)
 
          if(watched_entity) {
             name_field.innerHTML = findKey(entities, klass =>
                 watched_entity instanceof klass
-            );
+            )
          } else {
-             name_field.innerHTML = '-';
+             name_field.innerHTML = '-'
          }
 
          for(const field of fields) {
@@ -126,15 +126,15 @@ import { markupPrefix } from './globals';
 
              if(!watched_entity || watched_entity[stat] === undefined ||
                                    watched_entity[stat] === Infinity) {
-                field.innerHTML = '-';
+                field.innerHTML = '-'
              } else {
                 // field dataset values match the entity property names
-                let value = watched_entity[stat];
+                let value = watched_entity[stat]
                 if(stat === 'level')
                     ++value; // level starts at 0 internally
                 else if(stat === 'is_horny') // value is bool
                     value = ['No', 'Yes'][0+value]; // cast to int for indexing
-                field.innerHTML = value;
+                field.innerHTML = value
              }
          }
      }
@@ -145,9 +145,9 @@ import { markupPrefix } from './globals';
       * @param {Number} step_duration Duration of steps in milliseconds
       */
      function update_speed(step_duration) {
-         const steps_per_sec = (1000 / step_duration).toFixed(2);
+         const steps_per_sec = (1000 / step_duration).toFixed(2)
          document.querySelector(`#${markupPrefix}steps-per-sec`).innerHTML =
-             padStart(steps_per_sec, '&nbsp;', 5);
+             padStart(steps_per_sec, '&nbsp;', 5)
      }
 
      return {
@@ -155,7 +155,7 @@ import { markupPrefix } from './globals';
          highlight_watched_on_map,
          update_watched_info,
          update_speed
-     };
- }();
+     }
+ }()
 
- export default display;
+ export default display

@@ -5,8 +5,8 @@
  * @requires tile
  */
 
-import entities from './entities';
-import Tile from './tile';
+import entities from './entities'
+import Tile from './tile'
 import {
     each, map, invokeMap, range, concat, difference, pullAll, transform, chain
 } from 'lodash-es'
@@ -16,8 +16,8 @@ import {
   * @class simulation
   */
 const simulation = function() {
-    let tile_map = [];
-    const entity_lists = new Map(map(entities, klass => [klass, []]));
+    let tile_map = []
+    const entity_lists = new Map(map(entities, klass => [klass, []]))
 
     /**
      * Build up an internal tile map, based on the given entity map.
@@ -27,19 +27,19 @@ const simulation = function() {
     function setup_tile_map(entity_map) {
         tile_map = map(entity_map, (entity_row, y) => {
             return map(entity_row, (entity, x) => {
-                const tile = new Tile(y, x);
+                const tile = new Tile(y, x)
                 if(entity) {
-                    tile.push_entity(entity);
-                    entity.tile = tile;
+                    tile.push_entity(entity)
+                    entity.tile = tile
                     entity_lists.forEach((list, klass) => {
                         if(entity instanceof klass)
-                            list.push(entity);
-                    });
+                            list.push(entity)
+                    })
                 }
-                return tile;
-            });
-        });
-        setup_env_rings(tile_map);
+                return tile
+            })
+        })
+        setup_env_rings(tile_map)
     }
 
     /**
@@ -59,7 +59,7 @@ const simulation = function() {
                     tile.env_rings.push(calc_env_ring(tile_map, y, x, scope))
                 )
             )
-        );
+        )
     }
 
     /**
@@ -81,33 +81,33 @@ const simulation = function() {
      * @return {Array} tile ring list
      */
     function calc_env_ring(tile_map, center_y, center_x, scope) {
-        const env_ring = [];
+        const env_ring = []
 
         let x_on_map, y_on_map = center_y - scope;     //top ring row
         each(range(-scope, scope + 1), relative_x => {
-            x_on_map = center_x + relative_x;
-            add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope);
-        });
+            x_on_map = center_x + relative_x
+            add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope)
+        })
 
         x_on_map = center_x - scope;     //left ring column
         each(range(-scope + 1, scope), relative_y => {
-            y_on_map = center_y + relative_y;
-            add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope);
-        });
+            y_on_map = center_y + relative_y
+            add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope)
+        })
 
         x_on_map = center_x + scope;     //right ring column
         each(range(-scope + 1, scope), relative_y => {
-            y_on_map = center_y + relative_y;
-            add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope);
-        });
+            y_on_map = center_y + relative_y
+            add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope)
+        })
 
         y_on_map = center_y + scope;     //bottom ring row
         each(range(-scope, scope + 1), relative_x => {
-            x_on_map = center_x + relative_x;
-            add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope);
-        });
+            x_on_map = center_x + relative_x
+            add_environment_tile(env_ring, tile_map, y_on_map, x_on_map, scope)
+        })
 
-        return env_ring;
+        return env_ring
     }
 
     /**
@@ -128,11 +128,11 @@ const simulation = function() {
      */
     function add_environment_tile(env_ring, tile_map, pos_y, pos_x, scope) {
         if(tile_map[pos_y] && tile_map[pos_y][pos_x])
-            env_ring.push(tile_map[pos_y][pos_x]);
+            env_ring.push(tile_map[pos_y][pos_x])
         else if(scope === 1) {
             if(!entities.Border.dummy)
-                entities.Border.dummy = new entities.Border(new Tile());
-            env_ring.push(entities.Border.dummy.tile);
+                entities.Border.dummy = new entities.Border(new Tile())
+            env_ring.push(entities.Border.dummy.tile)
         }
     }
 
@@ -142,88 +142,88 @@ const simulation = function() {
      * @method update
      */
     function update() {
-        landanimal_action(entities.Carnivore, entities.Herbivore);
-        landanimal_action(entities.Herbivore, entities.Plant);
-        vegetation_action();
-        protozoan_action();
-        water_action();
+        landanimal_action(entities.Carnivore, entities.Herbivore)
+        landanimal_action(entities.Herbivore, entities.Plant)
+        vegetation_action()
+        protozoan_action()
+        water_action()
     }
 
     function vegetation_action() {
-        const plant_list = entity_lists.get(entities.Plant);
+        const plant_list = entity_lists.get(entities.Plant)
         const veggy_list = concat(
             plant_list, entity_lists.get(entities.RainForest)
-        );
+        )
 
         const new_plants = transform(veggy_list, (offspring_list, veggy) => {
-            const {offspring} = veggy.act();
+            const {offspring} = veggy.act()
             if(offspring)
-                offspring_list.push(offspring);
-        });
+                offspring_list.push(offspring)
+        })
 
-        entity_lists.set(entities.Plant, concat(plant_list, new_plants));
+        entity_lists.set(entities.Plant, concat(plant_list, new_plants))
     }
 
     function protozoan_action() {
-        const protozoan_list = entity_lists.get(entities.Protozoan);
+        const protozoan_list = entity_lists.get(entities.Protozoan)
 
         const dead_protos = transform(protozoan_list, (dead_list, proto) => {
-            const {offspring: new_animal, death} = proto.act();
+            const {offspring: new_animal, death} = proto.act()
             if(new_animal) {
                 each([entities.Herbivore, entities.Carnivore], entity_class => {
                     if(new_animal instanceof entity_class)
-                        entity_lists.get(entity_class).push(new_animal);
-                });
-                dead_list.push(proto);
+                        entity_lists.get(entity_class).push(new_animal)
+                })
+                dead_list.push(proto)
             } else if(death) {
-                dead_list.push(proto);
+                dead_list.push(proto)
             }
-        });
+        })
 
-        pullAll(protozoan_list, dead_protos);
+        pullAll(protozoan_list, dead_protos)
     }
 
     function water_action() {
-        const water_list = entity_lists.get(entities.Water);
+        const water_list = entity_lists.get(entities.Water)
 
         const new_protos = transform(water_list, (offspring_list, water) => {
-            const {offspring} = water.act();
+            const {offspring} = water.act()
             if(offspring)
-                offspring_list.push(offspring);
-        });
+                offspring_list.push(offspring)
+        })
 
-        const protozoan_list = entity_lists.get(entities.Protozoan);
+        const protozoan_list = entity_lists.get(entities.Protozoan)
         entity_lists.set(
             entities.Protozoan, protozoan_list.concat(new_protos)
-        );
+        )
     }
 
     function landanimal_action(hunter_class, prey_class) {
         const action_data = map(entity_lists.get(hunter_class), hunter =>
             ({hunter, ...hunter.act()})
-        );
+        )
 
         const surviving_hunters = chain(action_data)
             .reject('death')
             .map('hunter')
-            .value();
+            .value()
 
         const offspring = chain(action_data)
             .filter('offspring')
             .map('offspring')
-            .value();
+            .value()
 
         const killed_prey = chain(action_data)
             .filter('killed_prey')
             .map('killed_prey')
-            .value();
+            .value()
 
         entity_lists.set(
             prey_class, difference(entity_lists.get(prey_class), killed_prey)
-        );
+        )
         entity_lists.set(
             hunter_class, concat(surviving_hunters, offspring)
-        );
+        )
     }
 
     /**
@@ -233,7 +233,7 @@ const simulation = function() {
      * @return {Array} 2D array containing rows of entity objects.
      */
     function entity_map() {
-        return map(tile_map, row => invokeMap(row, 'top_entity'));
+        return map(tile_map, row => invokeMap(row, 'top_entity'))
     }
 
     /**
@@ -245,7 +245,7 @@ const simulation = function() {
      *                  if there is none.
      */
     function get_entity(y, x) {
-        return tile_map[y][x].top_entity();
+        return tile_map[y][x].top_entity()
     }
 
     /**
@@ -254,9 +254,9 @@ const simulation = function() {
      * @param {String} type_name Class name of the entity type to kill
      */
     function kill_entity_type(type_name) {
-        const entity_class = entities[type_name];
-        invokeMap(entity_lists.get(entity_class), 'die');
-        entity_lists.set(entity_class, []);
+        const entity_class = entities[type_name]
+        invokeMap(entity_lists.get(entity_class), 'die')
+        entity_lists.set(entity_class, [])
     }
 
     // explicit syntax b/c we define a getter
@@ -276,7 +276,7 @@ const simulation = function() {
         'kill_entity_type': {
             value: kill_entity_type
         }
-    });
-}();
+    })
+}()
 
-export default simulation;
+export default simulation
