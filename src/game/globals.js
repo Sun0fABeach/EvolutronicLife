@@ -1,4 +1,4 @@
-const markupPrefix = "evolife--"
+const markupPrefix = 'evolife--'
 
 export {
   markupPrefix

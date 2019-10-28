@@ -53,7 +53,7 @@ import { markupPrefix } from './globals';
          const trackedId = `${markupPrefix}tracked`
          const currently_highlighted = document.getElementById(trackedId);
          if(currently_highlighted)
-            currently_highlighted.id = "";
+            currently_highlighted.id = '';
          if(watched_idx !== undefined) {
              const map = document.querySelector(`#${markupPrefix}world pre`);
              map.children[watched_idx].id = trackedId;
@@ -85,8 +85,8 @@ import { markupPrefix } from './globals';
          );
 
          if(!watched_entity) {
-             tracker_display.className = "";
-             tracker_display.innerHTML = "";
+             tracker_display.className = '';
+             tracker_display.innerHTML = '';
              return;
          }
 
@@ -109,7 +109,7 @@ import { markupPrefix } from './globals';
          );
 
          const statsPrefix = `${markupPrefix}entity-stats__`
-         const fields = Array.from(stats_table.getElementsByTagName("td"));
+         const fields = Array.from(stats_table.getElementsByTagName('td'));
          const name_field = stats_table.querySelector(`#${statsPrefix}type`);
          pull(fields, name_field);
 
@@ -118,7 +118,7 @@ import { markupPrefix } from './globals';
                 watched_entity instanceof klass
             );
          } else {
-             name_field.innerHTML = "-";
+             name_field.innerHTML = '-';
          }
 
          for(const field of fields) {
@@ -126,14 +126,14 @@ import { markupPrefix } from './globals';
 
              if(!watched_entity || watched_entity[stat] === undefined ||
                                    watched_entity[stat] === Infinity) {
-                field.innerHTML = "-";
+                field.innerHTML = '-';
              } else {
                 // field dataset values match the entity property names
                 let value = watched_entity[stat];
-                if(stat === "level")
+                if(stat === 'level')
                     ++value; // level starts at 0 internally
-                else if(stat === "is_horny") // value is bool
-                    value = ["No", "Yes"][0+value]; // cast to int for indexing
+                else if(stat === 'is_horny') // value is bool
+                    value = ['No', 'Yes'][0+value]; // cast to int for indexing
                 field.innerHTML = value;
              }
          }
@@ -147,7 +147,7 @@ import { markupPrefix } from './globals';
      function update_speed(step_duration) {
          const steps_per_sec = (1000 / step_duration).toFixed(2);
          document.querySelector(`#${markupPrefix}steps-per-sec`).innerHTML =
-             padStart(steps_per_sec, "&nbsp;", 5);
+             padStart(steps_per_sec, '&nbsp;', 5);
      }
 
      return {

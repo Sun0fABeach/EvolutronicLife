@@ -112,18 +112,18 @@ const translator = function() {
         return transform(entity_map, (html_map, ent_row, row_idx) => {
             each(ent_row, (ent, col_idx) => {
                 const {token, css_class} = entity_to_token(ent);
-                const span = document.createElement("span");
+                const span = document.createElement('span');
 
                 if(css_class)
                     span.className = css_class;
                 if(row_idx * ent_row.length + col_idx === tracked_idx)
-                    span.id = "evolife--tracked";
+                    span.id = 'evolife--tracked';
 
                 span.appendChild(document.createTextNode(token));
                 html_map.appendChild(span);
             });
             html_map.appendChild(document.createTextNode('\n'));
-        }, document.createElement("pre"));
+        }, document.createElement('pre'));
     }
 
     return { entity_to_token, parse_initial_map, build_html_map };

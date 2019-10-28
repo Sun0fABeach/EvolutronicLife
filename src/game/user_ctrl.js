@@ -30,18 +30,18 @@ const user_ctrl = function() {
         kill_button = document.getElementById(`${markupPrefix}kill`);
         kill_select = document.getElementById(`${markupPrefix}kill-options`);
         toggle_ctrls = document.getElementById(`${markupPrefix}toggle-ctrls`);
-        faster_button.addEventListener("click", increase_speed);
-        slower_button.addEventListener("click", decrease_speed);
-        pause_button.addEventListener("click", stop_resume);
-        kill_button.addEventListener("click", kill_entities);
+        faster_button.addEventListener('click', increase_speed);
+        slower_button.addEventListener('click', decrease_speed);
+        pause_button.addEventListener('click', stop_resume);
+        kill_button.addEventListener('click', kill_entities);
 
         /* disable this button via javascript here, b/c for some reason,
            firefox doesn't respect the disabled attribute in html */
-        step_button.setAttribute("disabled", "");
+        step_button.setAttribute('disabled', '');
 
-        toggle_ctrls.addEventListener("click", toggle_ctrl_panel);
-        document.getElementById("evolife--world").addEventListener(
-            "mouseup", track_entity
+        toggle_ctrls.addEventListener('click', toggle_ctrl_panel);
+        document.getElementById('evolife--world').addEventListener(
+            'mouseup', track_entity
         );
     }
 
@@ -57,11 +57,11 @@ const user_ctrl = function() {
         } = main.slow_down_interval();
 
         if(disable_button) {
-            slower_button.setAttribute("disabled", "");
-            slower_button.removeEventListener("click", decrease_speed);
-        } else if(faster_button.hasAttribute("disabled")) {
-            faster_button.removeAttribute("disabled");
-            faster_button.addEventListener("click", increase_speed);
+            slower_button.setAttribute('disabled', '');
+            slower_button.removeEventListener('click', decrease_speed);
+        } else if(faster_button.hasAttribute('disabled')) {
+            faster_button.removeAttribute('disabled');
+            faster_button.addEventListener('click', increase_speed);
         }
     }
 
@@ -77,11 +77,11 @@ const user_ctrl = function() {
         } = main.speed_up_interval();
 
         if(disable_button) {
-            faster_button.setAttribute("disabled", "");
-            faster_button.removeEventListener("click", increase_speed);
-        } else if(slower_button.hasAttribute("disabled")) {
-            slower_button.removeAttribute("disabled");
-            slower_button.addEventListener("click", decrease_speed);
+            faster_button.setAttribute('disabled', '');
+            faster_button.removeEventListener('click', increase_speed);
+        } else if(slower_button.hasAttribute('disabled')) {
+            slower_button.removeAttribute('disabled');
+            slower_button.addEventListener('click', decrease_speed);
         }
     }
 
@@ -93,13 +93,13 @@ const user_ctrl = function() {
      */
     function stop_resume(event) {
         if(main.stop_resume()) {
-            pause_button.innerHTML = "Pause";
-            step_button.setAttribute("disabled", "");
-            step_button.removeEventListener("click", do_step);
+            pause_button.innerHTML = 'Pause';
+            step_button.setAttribute('disabled', '');
+            step_button.removeEventListener('click', do_step);
         } else {
-            pause_button.innerHTML = "Resume";
-            step_button.removeAttribute("disabled");
-            step_button.addEventListener("click", do_step);
+            pause_button.innerHTML = 'Resume';
+            step_button.removeAttribute('disabled');
+            step_button.addEventListener('click', do_step);
         }
     }
 
@@ -133,16 +133,16 @@ const user_ctrl = function() {
         let ctrl_panel = document.getElementById(
             `${markupPrefix}controls-wrapper`
         );
-        if(toggle_ctrls.innerHTML.trim() === "Show Control Panel") {
-            ctrl_panel.style.height = ctrl_panel.scrollHeight + "px";
+        if(toggle_ctrls.innerHTML.trim() === 'Show Control Panel') {
+            ctrl_panel.style.height = ctrl_panel.scrollHeight + 'px';
             ctrl_panel.style.opacity = 1;
-            ctrl_panel.style.marginBottom = "12px";
-            toggle_ctrls.innerHTML = "Hide Control Panel";
+            ctrl_panel.style.marginBottom = '12px';
+            toggle_ctrls.innerHTML = 'Hide Control Panel';
         } else {
             ctrl_panel.style.height = 0;
             ctrl_panel.style.opacity = 0;
             ctrl_panel.style.marginBottom = 0;
-            toggle_ctrls.innerHTML = "Show Control Panel";
+            toggle_ctrls.innerHTML = 'Show Control Panel';
         }
     }
 
