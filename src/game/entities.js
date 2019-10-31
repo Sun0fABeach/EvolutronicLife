@@ -3,7 +3,10 @@
  * @module entities
  */
 
-import { random, sample } from 'lodash-es'
+import {
+    min, maxBy, eq, random, sample, transform, invokeMap, filter,
+    every, slice, each, range, method, partial, conforms
+} from 'lodash-es'
 
 const entities = function() {
     function Mortal(Base = class {}) {
@@ -123,11 +126,10 @@ const entities = function() {
 
         _hunt(prey_class) {
             const env = this._tile.env_rings[0]
-            const prey_list = env.reduce((found, tile) => {
+            const prey_list = transform(env, (found, tile) => {
                 const prey = tile.entity(prey_class)
                 if(prey) found.push(prey)
-                return found
-            }, [])
+            })
 
             if(prey_list.length === 0)
                 return {ate: false}
@@ -135,7 +137,7 @@ const entities = function() {
             const prey = sample(prey_list)
             this._food += prey.health
             const min_energy = this._cfg.min_energy_replenish
-            this._energy = Math.min(min_energy, this._energy + 1)
+            this._energy = min([min_energy, this._energy + 1])
             this._rdy_to_copulate = true
             if((prey.health -= this._attack) <= 0)
                 return {ate: true, killed_prey: prey.die()}
@@ -161,17 +163,16 @@ const entities = function() {
 
         _try_reproduction(mate_class) {
             const env = this._tile.env_rings[0]
-            const mating_partners = env.reduce((partner_list, tile) => {
+            const mating_partners = transform(env, (partner_list, tile) => {
                 const partner = tile.entity(mate_class, this._lvl)
                 if(partner && partner.is_horny)
                     partner_list.push(partner)
-                return partner_list
-            }, [])
+            })
 
             if(mating_partners.length === 0)
                 return null
 
-            const birthplace_list = env.filter(tile => tile.walkable())
+            const birthplace_list = filter(env, method('walkable'))
             if(birthplace_list.length === 0)
                 return null
             const birthplace = sample(birthplace_list)
@@ -237,30 +238,27 @@ const entities = function() {
                 return null
 
             // of the found targets, we pick one with the highest lvl
-            const max_target_lvl = Math.max(
-                ...possible_targets.map(entity => entity.level)
-            )
-            possible_targets = possible_targets.filter(
-                entity => entity.level === max_target_lvl
-            )
+            const max_target_lvl = maxBy(possible_targets, 'level').level
+            possible_targets = filter(possible_targets, conforms(
+                { 'level': partial(eq, max_target_lvl) }
+            ))
 
             return this._make_step_choice(possible_targets)
         }
 
         _search_target_candidates(target_class, lvl = undefined) {
-            const possible_targets = []
+            const view_rings = slice(this._tile.env_rings, 1, this._view_range)
+            let candidates = []
 
-            for(const ring of this._tile.env_rings.slice(1, this._view_range)) {
-                for(const tile of ring) {
-                    const entity = tile.entity(target_class, lvl)
-                    if(entity)
-                        possible_targets.push(entity)
-                }
-                if(possible_targets.length > 0)
-                    break
-            }
+            each(view_rings, ring => {
+                candidates = filter(
+                    invokeMap(ring, 'entity', target_class, lvl)
+                )
+                if(candidates.length > 0)
+                    return false
+            })
 
-            return possible_targets
+            return candidates
         }
 
         _make_step_choice(target_candidates) {
@@ -316,9 +314,7 @@ const entities = function() {
 
         _random_step() {
             const env = this._tile.env_rings[0]
-            const walkable_tiles = env.filter(
-                tile => tile.walkable(this._lvl)
-            )
+            const walkable_tiles = filter(env, method('walkable', this._lvl))
             if(walkable_tiles.length > 0)
                 return sample(walkable_tiles)
             else
@@ -376,7 +372,7 @@ const entities = function() {
     class Herbivore extends LandAnimal {
         constructor(tile, lvl) {
             const cfg = Herbivore.config
-            const level = Math.min(lvl, cfg.max_level)
+            const level = min([lvl, cfg.max_level])
 
             super(tile, level)
 
@@ -397,7 +393,7 @@ const entities = function() {
     class Carnivore extends LandAnimal {
         constructor(tile, lvl) {
             const cfg = Carnivore.config
-            const level = Math.min(lvl, cfg.max_level)
+            const level = min([lvl, cfg.max_level])
 
             super(tile, level)
 
@@ -424,7 +420,7 @@ const entities = function() {
         _beach_reachable() {
             const env = this._tile.env_rings[0]
             // save as instance var for later use by _jump_on_beach
-            this._adjacent_beaches = env.filter((tile) => tile.walkable())
+            this._adjacent_beaches = filter(env, method('walkable'))
             return this._adjacent_beaches.length > 0
         }
 
@@ -440,8 +436,8 @@ const entities = function() {
                 return false
 
             const env = this._tile.env_rings[0]
-            const swimmable_tiles = env.filter(
-                tile => tile.top_entity() instanceof Water
+            const swimmable_tiles = filter(env, tile =>
+                tile.top_entity() instanceof Water
             )
             if(swimmable_tiles.length === 0) {
                 this.die()
@@ -466,7 +462,7 @@ const entities = function() {
 
         _try_growth() {
             const env = this._tile.env_rings[0]
-            const free_tiles = env.filter(tile => tile.empty())
+            const free_tiles = filter(env, method('empty'))
             if(free_tiles.length > 0) {
                 if(this._ticks_to_reproduce === undefined) {
                     this._ticks_to_reproduce = random(
@@ -497,7 +493,7 @@ const entities = function() {
     class Plant extends Mortal(Vegetation) {
         constructor(tile, lvl) {
             const cfg = Plant.config
-            const level = Math.min(lvl, cfg.max_level)
+            const level = min([lvl, cfg.max_level])
             const allows_step = Math.abs(lvl - cfg.max_level)
 
             super(allows_step, tile, level)
@@ -507,7 +503,7 @@ const entities = function() {
         }
 
         _set_configs(lvl) {
-            this._lvl = Math.min(lvl, Plant.config.max_level)
+            this._lvl = min([lvl, Plant.config.max_level])
             this._allows_step = Math.abs(this._lvl - Plant.config.max_level)
             this._health = Plant.config.health[this._lvl]
             this._ticks_to_evolve = undefined
@@ -518,7 +514,7 @@ const entities = function() {
                 return false
 
             const env = this._tile.env_rings[0]
-            if(env.every(tile => {
+            if(every(env, tile => {
                 const adjacent_veg = tile.entity(Vegetation)
                 return adjacent_veg && adjacent_veg.level >= this._lvl ||
                        tile.entity(Border)
@@ -528,7 +524,7 @@ const entities = function() {
                     this._ticks_to_evolve = random(...tick_range)
                     return false
                 } else {
-                    return --this._ticks_to_evolve <= 0 ? true : false
+                    return --this._ticks_to_evolve <= 0
                 }
             }
 
@@ -542,12 +538,12 @@ const entities = function() {
         }
 
         devolve() {
-            for(let lvl = 0; lvl < Plant.config.health.length-1; ++lvl) {
+            each(range(Plant.config.health.length - 1), lvl => {
                 if(this._health <= Plant.config.health[lvl]) {
                     this._set_configs(lvl)
-                    return
+                    return false
                 }
-            }
+            })
         }
 
         act() {
