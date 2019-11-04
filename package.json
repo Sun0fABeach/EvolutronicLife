@@ -3,25 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vue-cli-service serve",
-    "build": "vue-cli-service build --modern",
     "serve": "serve dist",
-    "lib": "vue-cli-service build --target lib --name evolife src/components/Game.vue",
-    "doc": "yuidoc src"
+    "build": "vue-cli-service build --modern",
+    "dev": "vue-cli-service serve",
+    "doc": "yuidoc src",
+    "lib": "vue-cli-service build --target lib --name evolife src/components/Game.vue"
   },
   "dependencies": {
-    "core-js": "^2.6.5",
+    "core-js": "^3.3.2",
     "lodash-es": "^4.17.15",
     "vue": "^2.6.10"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.9.0",
-    "@vue/cli-plugin-typescript": "^3.9.0",
-    "@vue/cli-service": "^3.9.0",
-    "node-sass": "^4.9.0",
-    "sass-loader": "^7.1.0",
-    "serve": "^11.1.0",
-    "typescript": "^3.4.3",
+    "@vue/cli-plugin-babel": "^4.0.5",
+    "@vue/cli-plugin-typescript": "^4.0.5",
+    "@vue/cli-service": "^4.0.5",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0",
+    "serve": "^11.2.0",
+    "typescript": "^3.6.4",
     "vue-template-compiler": "^2.6.10",
     "yuidocjs": "^0.10.2"
   }
