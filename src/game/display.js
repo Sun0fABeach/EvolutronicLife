@@ -147,7 +147,7 @@ import { markupPrefix } from './globals'
     function update_speed(step_duration) {
         const steps_per_sec = (1000 / step_duration).toFixed(2)
         document.querySelector(`#${markupPrefix}steps-per-sec`).innerHTML =
-            padStart(steps_per_sec, '&nbsp;', 5)
+            padStart(steps_per_sec, 5, String.fromCharCode(160)) // nbsp
     }
 
     return {
