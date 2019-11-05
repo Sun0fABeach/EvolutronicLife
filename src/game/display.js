@@ -53,7 +53,7 @@ import { markupPrefix } from './globals'
         const trackedId = `${markupPrefix}tracked`
         const currently_highlighted = document.getElementById(trackedId)
         if(currently_highlighted)
-        currently_highlighted.id = ''
+            currently_highlighted.id = ''
         if(watched_idx !== undefined) {
             const map = document.querySelector(`#${markupPrefix}world pre`)
             map.children[watched_idx].id = trackedId
@@ -114,9 +114,9 @@ import { markupPrefix } from './globals'
         pull(fields, name_field)
 
         if(watched_entity) {
-        name_field.innerHTML = findKey(entities, klass =>
-            watched_entity instanceof klass
-        )
+            name_field.innerHTML = findKey(entities, klass =>
+                watched_entity instanceof klass
+            )
         } else {
             name_field.innerHTML = '-'
         }
@@ -126,15 +126,15 @@ import { markupPrefix } from './globals'
 
             if(!watched_entity || watched_entity[stat] === undefined ||
                                 watched_entity[stat] === Infinity) {
-            field.innerHTML = '-'
+                field.innerHTML = '-'
             } else {
-            // field dataset values match the entity property names
-            let value = watched_entity[stat]
+                // field dataset values match the entity property names
+                let value = watched_entity[stat]
             if(stat === 'level')
                 ++value; // level starts at 0 internally
             else if(stat === 'is_horny') // value is bool
                 value = ['No', 'Yes'][0+value]; // cast to int for indexing
-            field.innerHTML = value
+                field.innerHTML = value
             }
         }
     }
