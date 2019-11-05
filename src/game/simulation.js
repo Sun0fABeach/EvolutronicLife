@@ -8,7 +8,8 @@
 import entities from './entities'
 import Tile from './tile'
 import {
-    each, map, invokeMap, range, concat, difference, pullAll, transform, chain
+    each, map, filter, reject, invokeMap, range, concat, difference, pullAll,
+    transform
 } from 'lodash-es'
 
  /**
@@ -203,23 +204,12 @@ const simulation = function() {
             ({hunter, ...hunter.act()})
         )
 
-        const surviving_hunters = chain(action_data)
-            .reject('death')
-            .map('hunter')
-            .value()
-
-        const offspring = chain(action_data)
-            .filter('offspring')
-            .map('offspring')
-            .value()
-
-        const killed_prey = chain(action_data)
-            .filter('killed_prey')
-            .map('killed_prey')
-            .value()
+        const surviving_hunters = map(reject(action_data, 'death'), 'hunter')
+        const offspring = map(filter(action_data, 'offspring'), 'offspring')
+        const eaten = map(filter(action_data, 'killed_prey'), 'killed_prey')
 
         entity_lists.set(
-            prey_class, difference(entity_lists.get(prey_class), killed_prey)
+            prey_class, difference(entity_lists.get(prey_class), eaten)
         )
         entity_lists.set(
             hunter_class, concat(surviving_hunters, offspring)
