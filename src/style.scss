@@ -1,6 +1,7 @@
 $border-color: #904723;
 $text-color: #b0acac;
 $backdrop-color: #999966;
+$panel-backdrop-color: #151010;
 
 #evolife {
   display: inline-block;
@@ -38,7 +39,7 @@ $backdrop-color: #999966;
 
   &--control-panel {
     padding: 12px 0;
-    background-color: #151010;
+    background-color: $panel-backdrop-color;
   }
 
   &--controls-wrapper {
@@ -86,7 +87,7 @@ $backdrop-color: #999966;
     }
 
     option {
-      background-color: #151010;
+      background-color: $panel-backdrop-color;
     }
   }
 
@@ -154,7 +155,7 @@ $backdrop-color: #999966;
       color: white;
     }
     &[disabled] {
-      background-color: #151010;
+      background-color: $panel-backdrop-color;
       color: #868181;
       cursor: default;
     }
