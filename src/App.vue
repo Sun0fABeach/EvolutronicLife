@@ -17,21 +17,20 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-html, body {
-  height: 100%;
-}
-html {
-  width: 100%;
-}
 body {
+  margin: 0;  // remove browser auto-margin
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   background-color: #151010;
-  margin: 0;  /* remove browser auto-margin */
   font-family: sans-serif;
+}
+#app {
+  position: relative; // anchor for centered game position
 }
 #evolife {
   position: absolute;
-  top: 100px;
-  left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -286px); // half height of game with closed panel
 }
 </style>
