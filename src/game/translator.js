@@ -40,7 +40,7 @@ const translator = function() {
         [entities.Carnivore,  { tokens: 'ԅԇʡ',  get_token: token_by_level }],
         [entities.Plant,      { tokens: 'ʷʬYϒ', get_token: plant_token }],
         [entities.RainForest, { tokens: 'Ϋϔ',   get_token: token_toggler }],
-        [entities.Water,      { tokens: '∽~',   get_token: token_toggler }],
+        [entities.Water,      { tokens: '∼~',   get_token: token_toggler }],
         [entities.Protozoan,  { tokens: '§',    get_token: constant_token }],
         [entities.Beach,      { tokens: ':',    get_token: constant_token }]
     ])
