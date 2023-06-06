@@ -1,8 +1,5 @@
 # Evolutronic Life
 
-www.higgsino.de/evolife
-=======================
-
 ## Project setup
 ```
 npm install
