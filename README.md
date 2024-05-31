@@ -1,21 +1,25 @@
 # Evolutronic Life
 
+#### Simple and useless critter simulation.
+
+## [Play](https://evolutronic-life.netlify.app/)
+
 ## Project setup
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compile and hot-reload for development
 ```
 npm run dev
 ```
 
-### Compiles and minifies for production
+### Compile and minify for production
 ```
 npm run build
 ```
 
-### Serves production build
+### Serve production build
 ```
 npm run serve
 ```
